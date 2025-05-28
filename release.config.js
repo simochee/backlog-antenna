@@ -12,23 +12,23 @@ const WXT_SUBMIT_CMD = String.raw`
 
 /** @type {import('semantic-release').GlobalConfig} */
 export default {
-	branches: ["main"],
-	plugins: [
-		"@semantic-release/commit-analyzer",
-		"@semantic-release/release-notes-generator",
-		"@semantic-release/changelog",
-		["@semantic-release/npm", { npmPublish: false }],
-		["@semantic-release/exec", { prepareCmd: WXT_ZIP_CMD }],
-		["@semantic-release/exec", { prepareCmd: WXT_SUBMIT_CMD }],
-		[
-			"@semantic-release/github",
-			{
-				assets: [
-					{ path: "./.output/*-chrome.zip" },
-					{ path: "./.output/*-firefox.zip" },
-				],
-				labels: ["release"],
-			},
-		],
-	],
+  branches: ["main"],
+  plugins: [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    ["@semantic-release/npm", { npmPublish: false }],
+    ["@semantic-release/exec", { prepareCmd: WXT_ZIP_CMD }],
+    ["@semantic-release/exec", { prepareCmd: WXT_SUBMIT_CMD }],
+    [
+      "@semantic-release/github",
+      {
+        assets: [
+          { path: "./.output/*-chrome.zip" },
+          { path: "./.output/*-firefox.zip" },
+        ],
+        labels: ["release"],
+      },
+    ],
+  ],
 };

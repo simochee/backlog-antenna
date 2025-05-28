@@ -5,14 +5,12 @@ commit-msg:
 
 pre-commit:
   commands:
-    biome:
+    prettier:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: |-
-        npx biome check \
+        npx prettier \
           --write \
-          --unsafe \
-          --no-errors-on-unmatched \
-          --files-ignore-unknown=true \
+          --ignore-unknown \
           {staged_files} \
         && git update-index --again
 

@@ -1,32 +1,36 @@
 {
-	"name": "backlog-antenna",
-	"version": "2.0.0",
-	"private": true,
-	"type": "module",
-	"scripts": {
-		"build": "wxt build",
-		"dev": "wxt",
-		"postinstall": "lefthook install && wxt prepare"
-	},
-	"dependencies": {
-		"react": "^19.1.0",
-		"react-dom": "^19.1.0"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
-		"@commitlint/cli": "^19.8.1",
-		"@commitlint/config-conventional": "^19.8.1",
-		"@semantic-release/changelog": "^6.0.3",
-		"@semantic-release/exec": "^7.1.0",
-		"@tsconfig/vite-react": "^6.3.5",
-		"@types/react": "^19.1.6",
-		"@types/react-dom": "^19.1.5",
-		"@wxt-dev/auto-icons": "^1.0.2",
-		"@wxt-dev/i18n": "^0.2.4",
-		"lefthook": "^1.11.13",
-		"semantic-release": "^24.2.4",
-		"sort-package-json": "^3.2.1",
-		"wxt": "^0.20.6"
-	},
-	"packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977"
+  "name": "backlog-antenna",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "wxt build",
+    "dev": "wxt",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "postinstall": "lefthook install && wxt prepare"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^7.1.0",
+    "@tsconfig/vite-react": "^6.3.5",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "@wxt-dev/auto-icons": "^1.0.2",
+    "@wxt-dev/i18n": "^0.2.4",
+    "lefthook": "^1.11.13",
+    "prettier": "^3.5.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "semantic-release": "^24.2.4",
+    "sort-package-json": "^3.2.1",
+    "wxt": "^0.20.6"
+  },
+  "packageManager": "pnpm@10.11.0+sha512.6540583f41cc5f628eb3d9773ecee802f4f9ef9923cc45b69890fb47991d4b092964694ec3a4f738a420c918a333062c8b925d312f42e4f0c263eb603551f977"
 }

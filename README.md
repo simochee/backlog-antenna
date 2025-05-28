@@ -106,8 +106,8 @@ LONG_DESCRIPTION
 
 ## Install
 
-[link-chrome]: https://chromewebstore.google.com/detail/CHROME_EXTENSION_ID 'Chrome Web Store'
-[link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/FIREFOX_EXTENSION_ID/ 'Add-ons for Firefox'
+[link-chrome]: https://chromewebstore.google.com/detail/CHROME_EXTENSION_ID "Chrome Web Store"
+[link-firefox]: https://addons.mozilla.org/en-US/firefox/addon/FIREFOX_EXTENSION_ID/ "Add-ons for Firefox"
 
 [<img src="https://raw.githubusercontent.com/alrra/browser-logos/90fdf03c/src/chrome/chrome.svg" width="32" alt="Chrome">][link-chrome]
 [<img src="https://img.shields.io/chrome-web-store/v/CHROME_EXTENSION_ID" alt="Chrome Web Store">][link-chrome]
