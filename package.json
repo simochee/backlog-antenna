@@ -8,12 +8,19 @@
 		"dev": "wxt",
 		"postinstall": "lefthook install && wxt prepare"
 	},
+	"dependencies": {
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0"
+	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
 		"@commitlint/cli": "^19.8.1",
 		"@commitlint/config-conventional": "^19.8.1",
 		"@semantic-release/changelog": "^6.0.3",
 		"@semantic-release/exec": "^7.1.0",
+		"@tsconfig/vite-react": "^6.3.5",
+		"@types/react": "^19.1.6",
+		"@types/react-dom": "^19.1.5",
 		"@wxt-dev/auto-icons": "^1.0.2",
 		"@wxt-dev/i18n": "^0.2.4",
 		"lefthook": "^1.11.13",
