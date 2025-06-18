@@ -9,6 +9,8 @@
 		"postinstall": "lefthook install && wxt prepare"
 	},
 	"dependencies": {
+		"@tanstack/react-router": "^1.121.21",
+		"@tanstack/router-plugin": "^1.121.22",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0"
 	},

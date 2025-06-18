@@ -87,6 +87,19 @@ WXTフレームワーク、React、Tailwind CSSで構築されたブラウザ拡
 - スペースの追加・削除・並び変えは options で行う
   - それ以外は popup で行う
 
+### ルーティング
+
+#### Popup
+
+- / : storage.local の状態から表示されていたルートにリダイレクト
+- /(spaceKey)/notifications : 自分の受け取ったお知らせ一覧
+- /(spaceKey)/projects : プロジェクト一覧
+- /(spaceKey)/issues : 最近見た課題一覧
+
+#### Options
+
+- / : 設定項目一覧
+
 ## Urls
 
 - [Backlog ヘルプセンター](https://support-ja.backlog.com/hc/ja)
