@@ -56,7 +56,39 @@ WXTフレームワーク、React、Tailwind CSSで構築されたブラウザ拡
 - プルリクエストのタイトルはConventional Commitに従ったものにすること
 - プルリクエストのマージは特別な指示がない場合はsquash mergeにすること
 
-## 公開
-- Chrome Web StoreとFirefox Add-onsへの自動公開をサポート
-- バージョン管理にsemantic-releaseを使用
-- ストア認証情報用のリポジトリシークレットが必要
+## 仕様
+
+### 機能要件
+- 複数のスペースにログインできる
+  - スペースをショートカットキーで切り替え
+  - スペースの並び変え
+- ログインは API Key か OAuth2 で行う
+- 拡張機能のバッジに各スペースの未読件数の合計数を表示
+  - バッジの件数に加算しないスペースを設定できる
+- 各スペースごとの機能
+  - 自分へのおすすめを一覧表示
+  - 自分がアクセスした課題の一覧表示
+  - 自分が参加しているプロジェクトを一覧表示
+
+### 非機能要件
+- 取得した Backlog に関するデータは一時的にキャッシュを保持する
+- *.backlog.com と *.backlog.jp 以外への通信を行わない
+- 課題の一覧は Infinite Scroll (Virtual Scroll) で実装する
+- Rate Limit の場合はエラーになった呼び出しごとにモードレスなエラーにリトライボタンを表示する
+- 不明な API エラーの場合は、エラービューにリロードボタンを表示する
+
+### API・権限要件
+- Backlog API を npm:backlog-js で呼び出す
+- 認証は API Key と OAuth2 Access Token の双方に対応する
+- OAuth2 は launchWebAuthFlow を利用する
+- タイマーを利用し、定期的に未読件数を取得する
+- デスクトップ通知を利用し、未読があることを知らせる
+- 取得したデータのキャッシュを storage.local に保持する
+- スペースの追加・削除・並び変えは options で行う
+  - それ以外は popup で行う
+
+## Urls
+
+- [Backlog ヘルプセンター](https://support-ja.backlog.com/hc/ja)
+- [Backlog API とは](https://developer.nulab.com/ja/docs/backlog/)
+- [npm:backlog-js](https://www.npmjs.com/package/backlog-js)
