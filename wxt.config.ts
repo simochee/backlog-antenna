@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import { defineConfig } from "wxt";
 
 export default defineConfig({
@@ -12,6 +13,12 @@ export default defineConfig({
 		plugins: [
 			// biome-ignore lint/suspicious/noExplicitAny: TailwindCSS v4 は Vite 6 に未対応
 			tailwindcss() as any,
+			tanstackRouter({
+				routesDirectory: "./entrypoints/popup/routes",
+				generatedRouteTree: "./entrypoints/popup/routeTree.gen.ts",
+				target: "react",
+				autoCodeSplitting: true,
+			}),
 		],
 	}),
 });
