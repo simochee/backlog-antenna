@@ -2,7 +2,7 @@ import { storage } from "#imports";
 import type {
 	BacklogSpace,
 	BacklogSpaceWithAuthorization,
-} from "~/types/space";
+} from "@/types/space";
 
 const spaces = storage.defineItem<BacklogSpaceWithAuthorization[]>(
 	"local:spaces",
