@@ -7,12 +7,14 @@ pre-commit:
   commands:
     prettier:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+      stage_fixed: true
       run: |-
-        npx prettier \
+        npx @biomejs/biome check \
           --write \
-          --ignore-unknown \
-          {staged_files} \
-        && git update-index --again
+          --unsafe \
+          --no-errors-on-unmatched \
+          --colors=off \
+          {staged_files}
 
     sort-package-json:
       glob: package.json
