@@ -7,6 +7,7 @@ export default defineConfig({
 		default_locale: "ja",
 		description: "__MSG_ext_description__",
 		name: "__MSG_ext_name__",
+		permissions: ["storage"],
 	},
 	modules: ["@wxt-dev/i18n/module", "@wxt-dev/auto-icons"],
 	vite: () => ({
