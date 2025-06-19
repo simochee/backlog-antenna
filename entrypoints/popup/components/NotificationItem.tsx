@@ -1,4 +1,4 @@
-import { getStatusText } from "@/utils/notifications";
+import { getStatusText } from "@/utils/backlog";
 
 type Props = {
 	notification: any;
