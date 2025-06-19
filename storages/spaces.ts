@@ -1,13 +1,9 @@
 import { storage } from "#imports";
-import type {
-	BacklogSpace,
-	BacklogSpaceWithAuthorization,
-} from "@/types/space";
+import type { BacklogSpace } from "@/types/space";
 
-const spaces = storage.defineItem<BacklogSpaceWithAuthorization[]>(
-	"local:spaces",
-	{ fallback: [] },
-);
+const spaces = storage.defineItem<BacklogSpace[]>("local:spaces", {
+	fallback: [],
+});
 
 /**
  * 保存されているすべてのBacklogスペースを取得する
@@ -20,7 +16,7 @@ export const getSpaces = () => spaces.getValue();
  * @param space 追加するBacklogスペース情報
  * @throws 同じスペースドメインが既に存在する場合
  */
-export const appendSpace = async (space: BacklogSpaceWithAuthorization) => {
+export const appendSpace = async (space: BacklogSpace) => {
 	const currentSpaces = await spaces.getValue();
 
 	if (currentSpaces.some((s) => s.spaceDomain === space.spaceDomain)) {

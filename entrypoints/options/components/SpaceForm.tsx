@@ -14,8 +14,9 @@ type Props = {
 	onSubmit: (data: FormSchema) => Promise<void>;
 };
 
-export const SpaceForm: React.FC<Props> = ({ onSubmit }) => {
+export const SpaceForm: React.FC<Props> = ({ initialValue, onSubmit }) => {
 	const [form, fields] = useForm<FormSchema>({
+		defaultValue: initialValue,
 		onSubmit: async (event, { submission }) => {
 			event.preventDefault();
 
@@ -28,7 +29,10 @@ export const SpaceForm: React.FC<Props> = ({ onSubmit }) => {
 
 	return (
 		<form {...getFormProps(form)}>
-			<input {...getInputProps(fields.spaceDomain, { type: "url" })} />
+			<input
+				{...getInputProps(fields.spaceDomain, { type: "url" })}
+				readOnly={!!initialValue?.spaceDomain}
+			/>
 			<input {...getInputProps(fields.apiKey, { type: "text" })} />
 			<button type="submit">Save</button>
 		</form>
