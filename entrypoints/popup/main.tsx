@@ -27,8 +27,8 @@ const persister = {
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
-			gcTime: 24 * 60 * 60 * 1000, // 5分間キャッシュ
-			staleTime: 5 * 60 * 1000, // 24時間保持
+			gcTime: 24 * 60 * 60 * 1000, // 3分間キャッシュ
+			staleTime: 3 * 60 * 1000, // 24時間保持
 		},
 	},
 });
