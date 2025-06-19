@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { Backlog } from "backlog-js";
 import { useCallback, useEffect, useRef } from "react";
 import { getSpaces } from "@/storages/spaces";
@@ -33,11 +34,11 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 
 /**
  * お知らせページコンポーネント
- * 無限スクロールで自分宛のお知らせを表示する
+ * TanStack Virtualで最適化された無限スクロールで自分宛のお知らせを表示する
  */
 function NotificationsPage() {
 	const { spaceDomain } = Route.useParams();
-	const scrollRef = useRef<HTMLDivElement>(null);
+	const parentRef = useRef<HTMLDivElement>(null);
 
 	const {
 		data,
@@ -78,25 +79,40 @@ function NotificationsPage() {
 		initialPageParam: undefined as number | undefined,
 	});
 
-	const handleScroll = useCallback(() => {
-		if (!scrollRef.current) return;
+	const notifications = data?.pages.flat() || [];
+	
+	// 仮想化設定
+	const virtualizer = useVirtualizer({
+		count: notifications.length + (hasNextPage ? 1 : 0) + (isFetchingNextPage ? 1 : 0),
+		getScrollElement: () => parentRef.current,
+		estimateSize: () => 120,
+		overscan: 5,
+	});
 
-		const { scrollTop, scrollHeight, clientHeight } = scrollRef.current;
-		const scrollPosition = scrollTop + clientHeight;
-		const threshold = scrollHeight - 100;
+	const items = virtualizer.getVirtualItems();
 
-		if (scrollPosition >= threshold && hasNextPage && !isFetchingNextPage) {
+	// 無限スクロールのトリガー
+	useEffect(() => {
+		const [lastItem] = [...virtualizer.getVirtualItems()].reverse();
+
+		if (!lastItem) {
+			return;
+		}
+
+		if (
+			lastItem.index >= notifications.length - 1 &&
+			hasNextPage &&
+			!isFetchingNextPage
+		) {
 			fetchNextPage();
 		}
-	}, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-	useEffect(() => {
-		const scrollElement = scrollRef.current;
-		if (!scrollElement) return;
-
-		scrollElement.addEventListener("scroll", handleScroll);
-		return () => scrollElement.removeEventListener("scroll", handleScroll);
-	}, [handleScroll]);
+	}, [
+		hasNextPage,
+		fetchNextPage,
+		notifications.length,
+		isFetchingNextPage,
+		virtualizer.getVirtualItems,
+	]);
 
 	if (isLoading) {
 		return (
@@ -113,47 +129,79 @@ function NotificationsPage() {
 		return (
 			<div>
 				<h2 className="mb-4 font-bold text-gray-800 text-xl">お知らせ一覧</h2>
-			<div className="text-center text-red-600">
-				お知らせの取得に失敗しました
+				<div className="text-center text-red-600">
+					お知らせの取得に失敗しました
+				</div>
 			</div>
-		</div>
 		);
 	}
 
-	const notifications = data?.pages.flat() || [];
+	if (notifications.length === 0) {
+		return (
+			<div>
+				<h2 className="mb-4 font-bold text-gray-800 text-xl">お知らせ一覧</h2>
+				<div className="text-center text-gray-600">
+					お知らせがありません
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div>
 			<h2 className="mb-4 font-bold text-gray-800 text-xl">お知らせ一覧</h2>
 			
 			<div
-				ref={scrollRef}
-				className="max-h-96 overflow-y-auto"
+				ref={parentRef}
+				className="overflow-auto"
 				style={{ height: "400px" }}
 			>
-				{notifications.length > 0 ? (
-					<div className="space-y-3">
-						{notifications.map((notification) => (
-							<NotificationItem key={notification.id} notification={notification} />
-						))}
-						
-						{isFetchingNextPage && (
-							<div className="text-center text-gray-600 py-4">
-								さらに読み込み中...
+				<div
+					style={{
+						height: `${virtualizer.getTotalSize()}px`,
+						width: "100%",
+						position: "relative",
+					}}
+				>
+					{items.map((virtualItem) => {
+						const isLoaderRow = virtualItem.index > notifications.length - 1;
+						const notification = notifications[virtualItem.index];
+
+						return (
+							<div
+								key={virtualItem.key}
+								style={{
+									position: "absolute",
+									top: 0,
+									left: 0,
+									width: "100%",
+									height: `${virtualItem.size}px`,
+									transform: `translateY(${virtualItem.start}px)`,
+								}}
+							>
+								{isLoaderRow ? (
+									hasNextPage ? (
+										<div className="flex items-center justify-center p-4">
+											<div className="text-center text-gray-600">
+												読み込み中...
+											</div>
+										</div>
+									) : (
+										<div className="flex items-center justify-center p-4">
+											<div className="text-center text-gray-500">
+												すべてのお知らせを表示しました
+											</div>
+										</div>
+									)
+								) : (
+									<div className="p-2">
+										<NotificationItem notification={notification} />
+									</div>
+								)}
 							</div>
-						)}
-						
-						{!hasNextPage && notifications.length > 0 && (
-							<div className="text-center text-gray-500 py-4">
-								すべてのお知らせを表示しました
-							</div>
-						)}
-					</div>
-				) : (
-					<div className="text-center text-gray-600">
-						お知らせがありません
-					</div>
-				)}
+						);
+					})}
+				</div>
 			</div>
 		</div>
 	);
