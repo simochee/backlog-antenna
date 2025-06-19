@@ -26,20 +26,16 @@ export const Route = createFileRoute("/")({
 
 		const routerState = await getRouterState();
 
-		return { routerState, spaces };
+		// 保存されたルーター状態があれば復元、なければフォールバック
+		const redirectPath =
+			routerState || `/${spaces[0].spaceDomain}/notifications`;
+
+		return { redirectPath };
 	},
 	notFoundComponent: NoSpacePage,
 });
 
 function IndexPage() {
-	const { spaces, routerState } = Route.useLoaderData();
-
-	// 保存されたルーター状態があれば復元
-	if (routerState) {
-		return <Navigate replace to={routerState} />;
-	}
-
-	// フォールバック: 最初のスペースのnotificationsページにリダイレクト
-	const defaultSpace = spaces[0];
-	return <Navigate replace to={`/${defaultSpace.spaceDomain}/notifications`} />;
+	const { redirectPath } = Route.useLoaderData();
+	return <Navigate replace to={redirectPath} />;
 }
