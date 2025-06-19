@@ -1,4 +1,5 @@
 import { createFileRoute, Navigate, notFound } from "@tanstack/react-router";
+import { getLastVisitedPage } from "@/storages/lastVisited";
 import { getSpaces } from "@/storages/spaces";
 
 const NoSpacePage: React.FC = () => (
@@ -23,22 +24,33 @@ export const Route = createFileRoute("/")({
 			throw notFound();
 		}
 
-		return { spaces };
+		const lastVisited = await getLastVisitedPage();
+
+		return { lastVisited, spaces };
 	},
 	notFoundComponent: NoSpacePage,
 });
 
 function IndexPage() {
-	const { spaces } = Route.useLoaderData();
+	const { spaces, lastVisited } = Route.useLoaderData();
 
-	// TODO: storage.localから最後に表示していたルートを取得してリダイレクト
-	// 今は最初のスペースのnotificationsページにリダイレクト
+	// 最後に訪問したページがあり、そのスペースが存在する場合は復元
+	if (lastVisited) {
+		const spaceExists = spaces.some(
+			(space) => space.spaceDomain === lastVisited.spaceDomain,
+		);
+
+		if (spaceExists) {
+			return (
+				<Navigate
+					replace
+					to={`/${lastVisited.spaceDomain}${lastVisited.path}`}
+				/>
+			);
+		}
+	}
+
+	// フォールバック: 最初のスペースのnotificationsページにリダイレクト
 	const defaultSpace = spaces[0];
-	return (
-		<Navigate
-			params={{ spaceDomain: defaultSpace.spaceDomain }}
-			replace
-			to="/$spaceDomain/notifications"
-		/>
-	);
+	return <Navigate replace to={`/${defaultSpace.spaceDomain}/notifications`} />;
 }

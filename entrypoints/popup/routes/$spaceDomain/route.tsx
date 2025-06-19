@@ -7,6 +7,7 @@ import {
 import { FeatureNavigation } from "@/entrypoints/popup/components/FeatureNavigation";
 import { NotFoundPage } from "@/entrypoints/popup/components/NotFoundPage";
 import { SpaceSelector } from "@/entrypoints/popup/components/SpaceSelector";
+import { usePageTracking } from "@/hooks/usePageTracking";
 import { getSpaces } from "@/storages/spaces";
 
 export const Route = createFileRoute("/$spaceDomain")({
@@ -36,6 +37,9 @@ export const Route = createFileRoute("/$spaceDomain")({
 function SpaceLayout() {
 	const { spaceDomain } = Route.useParams();
 	const location = useLocation();
+
+	// ページ訪問状態を追跡
+	usePageTracking();
 
 	// 現在のパスから機能を特定
 	const getCurrentFeature = (): "notifications" | "projects" | "issues" => {
