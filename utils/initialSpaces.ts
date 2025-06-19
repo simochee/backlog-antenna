@@ -6,38 +6,14 @@ import type { BacklogSpace } from "@/types/space";
  */
 export const getInitialSpaces = (): BacklogSpace[] => {
 	const envValue = import.meta.env.WXT_INITIAL_SPACES;
-	if (!envValue) {
-		return [];
-	}
+	if (!envValue) return [];
 
-	const spaceEntries = envValue.split(",");
-	const spaces: BacklogSpace[] = [];
-
-	for (const entry of spaceEntries) {
-		const trimmedEntry = entry.trim();
-		if (!trimmedEntry) {
-			continue;
-		}
-
-		const colonIndex = trimmedEntry.indexOf(":");
-		if (colonIndex === -1) {
-			console.warn(`Invalid initial space format: ${trimmedEntry}`);
-			continue;
-		}
-
-		const spaceDomain = trimmedEntry.slice(0, colonIndex).trim();
-		const apiKey = trimmedEntry.slice(colonIndex + 1).trim();
-
-		if (!spaceDomain || !apiKey) {
-			console.warn(`Invalid initial space format: ${trimmedEntry}`);
-			continue;
-		}
-
-		spaces.push({
-			apiKey,
-			spaceDomain,
+	return envValue
+		.split(",")
+		.map((entry) => entry.trim())
+		.filter((entry) => entry.includes(":"))
+		.map((entry) => {
+			const [spaceDomain, apiKey] = entry.split(":");
+			return { apiKey, spaceDomain };
 		});
-	}
-
-	return spaces;
 };
