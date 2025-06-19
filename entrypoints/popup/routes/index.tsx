@@ -1,4 +1,5 @@
 import { createFileRoute, Navigate, notFound } from "@tanstack/react-router";
+import { getSpaces } from "@/storages/spaces";
 
 const NoSpacePage: React.FC = () => (
 	<div className="flex min-h-screen items-center justify-center bg-gray-50">
@@ -16,7 +17,6 @@ const NoSpacePage: React.FC = () => (
 export const Route = createFileRoute("/")({
 	component: IndexPage,
 	loader: async () => {
-		const { getSpaces } = await import("@/storages/spaces");
 		const spaces = await getSpaces();
 
 		if (spaces.length === 0) {
