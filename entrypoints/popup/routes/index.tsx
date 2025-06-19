@@ -34,18 +34,9 @@ export const Route = createFileRoute("/")({
 function IndexPage() {
 	const { spaces, routerState } = Route.useLoaderData();
 
-	// 保存されたルーター状態があり、そのスペースが存在する場合は復元
+	// 保存されたルーター状態があれば復元
 	if (routerState) {
-		const pathSegments = routerState.path.split("/");
-		const spaceDomain = pathSegments[1];
-
-		const spaceExists = spaces.some(
-			(space) => space.spaceDomain === spaceDomain,
-		);
-
-		if (spaceExists) {
-			return <Navigate replace to={routerState.path} />;
-		}
+		return <Navigate replace to={routerState.path} />;
 	}
 
 	// フォールバック: 最初のスペースのnotificationsページにリダイレクト
