@@ -17,7 +17,7 @@ export const getRouterState = () => routerState.getValue();
 
 /**
  * 現在のページパス情報を保存する
- * @param path 完全なページパス（/{spaceDomain}/notifications など）
+ * @param path 完全なページパス
  */
 export const saveRouterState = async (path: string) => {
 	await routerState.setValue({

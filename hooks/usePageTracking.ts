@@ -9,12 +9,6 @@ export const usePageTracking = () => {
 	const location = useLocation();
 
 	useEffect(() => {
-		// 有効なパスの場合のみ保存
-		const isValidPath = /^\/[^/]+\/(notifications|projects|issues)$/.test(
-			location.pathname,
-		);
-		if (isValidPath) {
-			saveRouterState(location.pathname);
-		}
+		saveRouterState(location.pathname);
 	}, [location.pathname]);
 };
