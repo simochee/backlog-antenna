@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backlog Antenna - 設定</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f8fafc;
+            width: 380px;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        /* メインコンテナ */
+        .popup-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ヘッダー */
+        .header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            color: white;
+            padding: 16px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo::before {
+            content: "⚙️";
+            font-size: 18px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 12px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .version-info {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* メインコンテンツ */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        /* 設定セクション */
+        .settings-section {
+            background: white;
+            margin: 12px 16px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            background: #f9fafb;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-description {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        .section-content {
+            padding: 16px;
+        }
+
+        /* 設定項目 */
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1f2937;
+            margin-bottom: 2px;
+        }
+
+        .setting-desc {
+            font-size: 11px;
+            color: #6b7280;
+            line-height: 1.4;
+        }
+
+        .setting-control {
+            margin-left: 12px;
+        }
+
+        /* スイッチ */
+        .switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+            background: #d1d5db;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .switch.active {
+            background: #8b5cf6;
+        }
+
+        .switch::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .switch.active::after {
+            transform: translateX(20px);
+        }
+
+        /* セレクトボックス */
+        .select {
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 6px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            min-width: 80px;
+        }
+
+        .select:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.1);
+        }
+
+        /* ボタン */
+        .btn {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: #e5e7eb;
+        }
+
+        .btn.primary {
+            background: #8b5cf6;
+            color: white;
+            border-color: #8b5cf6;
+        }
+
+        .btn.primary:hover {
+            background: #7c3aed;
+        }
+
+        .btn.danger {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+
+        .btn.danger:hover {
+            background: #fee2e2;
+        }
+
+        /* スペース管理 */
+        .space-list {
+            margin-top: 12px;
+        }
+
+        .space-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .space-info {
+            flex: 1;
+        }
+
+        .space-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .space-domain {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        .space-badge {
+            background: #dcfce7;
+            color: #059669;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .space-badge.inactive {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .space-actions {
+            display: flex;
+            gap: 4px;
+        }
+
+        .space-btn {
+            padding: 4px 6px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 4px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .space-btn:hover {
+            background: #f3f4f6;
+        }
+
+        /* 統計情報 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px;
+        }
+
+        .stat-card {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1f2937;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        /* 危険ゾーン */
+        .danger-zone {
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+        }
+
+        .danger-zone .section-header {
+            background: #fee2e2;
+            border-bottom-color: #fecaca;
+        }
+
+        .danger-zone .section-title {
+            color: #dc2626;
+        }
+
+        /* フッター */
+        .footer {
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-info {
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .footer-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .footer-btn {
+            padding: 6px 12px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .footer-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .footer-btn.primary {
+            background: #8b5cf6;
+            color: white;
+            border-color: #8b5cf6;
+        }
+
+        .footer-btn.primary:hover {
+            background: #7c3aed;
+        }
+
+        /* スクロールバー */
+        .content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 2px;
+        }
+
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="popup-container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <div class="header-top">
+                <div class="logo">設定</div>
+                <div class="header-actions">
+                    <button class="header-btn">エクスポート</button>
+                    <button class="header-btn">ヘルプ</button>
+                </div>
+            </div>
+            <div class="version-info">Backlog Antenna v1.2.3</div>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="content">
+            <!-- 通知設定 -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        🔔 通知設定
+                    </h3>
+                    <p class="section-description">デスクトップ通知とバッジの動作を設定します</p>
+                </div>
+                <div class="section-content">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">デスクトップ通知</div>
+                            <div class="setting-desc">新しいお知らせを受信時に通知を表示</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch active"></div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">バッジ表示</div>
+                            <div class="setting-desc">拡張機能アイコンに未読件数を表示</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch active"></div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">通知間隔</div>
+                            <div class="setting-desc">新着チェックの頻度</div>
+                        </div>
+                        <div class="setting-control">
+                            <select class="select">
+                                <option>1分</option>
+                                <option selected>5分</option>
+                                <option>15分</option>
+                                <option>30分</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- スペース管理 -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        🏢 スペース管理
+                    </h3>
+                    <p class="section-description">接続中のBacklogスペースを管理します</p>
+                </div>
+                <div class="section-content">
+                    <button class="btn primary" style="width: 100%; margin-bottom: 12px;">
+                        + 新しいスペースを追加
+                    </button>
+                    
+                    <div class="space-list">
+                        <div class="space-item">
+                            <div class="space-info">
+                                <div class="space-name">開発チーム</div>
+                                <div class="space-domain">example.backlog.com</div>
+                            </div>
+                            <span class="space-badge">アクティブ</span>
+                            <div class="space-actions">
+                                <button class="space-btn">編集</button>
+                                <button class="space-btn">削除</button>
+                            </div>
+                        </div>
+                        
+                        <div class="space-item">
+                            <div class="space-info">
+                                <div class="space-name">マーケティング</div>
+                                <div class="space-domain">marketing.backlog.jp</div>
+                            </div>
+                            <span class="space-badge">アクティブ</span>
+                            <div class="space-actions">
+                                <button class="space-btn">編集</button>
+                                <button class="space-btn">削除</button>
+                            </div>
+                        </div>
+                        
+                        <div class="space-item">
+                            <div class="space-info">
+                                <div class="space-name">旧プロジェクト</div>
+                                <div class="space-domain">old-project.backlog.com</div>
+                            </div>
+                            <span class="space-badge inactive">非アクティブ</span>
+                            <div class="space-actions">
+                                <button class="space-btn">有効化</button>
+                                <button class="space-btn">削除</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 表示設定 -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        🎨 表示設定
+                    </h3>
+                    <p class="section-description">UIの表示方法をカスタマイズします</p>
+                </div>
+                <div class="section-content">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">テーマ</div>
+                            <div class="setting-desc">拡張機能の外観を変更</div>
+                        </div>
+                        <div class="setting-control">
+                            <select class="select">
+                                <option selected>ライト</option>
+                                <option>ダーク</option>
+                                <option>システム</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">密度</div>
+                            <div class="setting-desc">リストアイテムの表示密度</div>
+                        </div>
+                        <div class="setting-control">
+                            <select class="select">
+                                <option>コンパクト</option>
+                                <option selected>標準</option>
+                                <option>ゆったり</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">アニメーション</div>
+                            <div class="setting-desc">UI要素のアニメーションを有効化</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch active"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 使用統計 -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        📊 使用統計
+                    </h3>
+                    <p class="section-description">過去30日間の利用状況</p>
+                </div>
+                <div class="section-content">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-number">247</div>
+                            <div class="stat-label">確認した通知</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">89</div>
+                            <div class="stat-label">開いた課題</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">156</div>
+                            <div class="stat-label">アクティブ日数</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number">3.2分</div>
+                            <div class="stat-label">平均使用時間</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 高度な設定 -->
+            <div class="settings-section">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        ⚡ 高度な設定
+                    </h3>
+                    <p class="section-description">パフォーマンスとキャッシュの設定</p>
+                </div>
+                <div class="section-content">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">キャッシュ時間</div>
+                            <div class="setting-desc">データのキャッシュ保持時間</div>
+                        </div>
+                        <div class="setting-control">
+                            <select class="select">
+                                <option>1分</option>
+                                <option selected>3分</option>
+                                <option>5分</option>
+                                <option>10分</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">デバッグモード</div>
+                            <div class="setting-desc">開発者向けログ出力を有効化</div>
+                        </div>
+                        <div class="setting-control">
+                            <div class="switch"></div>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">キャッシュクリア</div>
+                            <div class="setting-desc">保存されたデータをすべて削除</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn">クリア</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 危険な操作 -->
+            <div class="settings-section danger-zone">
+                <div class="section-header">
+                    <h3 class="section-title">
+                        ⚠️ 危険な操作
+                    </h3>
+                    <p class="section-description">この操作は取り消せません</p>
+                </div>
+                <div class="section-content">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">すべてのデータを削除</div>
+                            <div class="setting-desc">スペース、設定、キャッシュをすべて削除します</div>
+                        </div>
+                        <div class="setting-control">
+                            <button class="btn danger">削除</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="footer">
+            <div class="footer-info">
+                最終保存: 2分前
+            </div>
+            <div class="footer-actions">
+                <button class="footer-btn">リセット</button>
+                <button class="footer-btn primary">保存</button>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

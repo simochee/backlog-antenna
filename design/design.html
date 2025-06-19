@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backlog Antenna - 最適化されたUI提案</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f8fafc;
+            width: 380px;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        /* メインコンテナ */
+        .popup-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ヘッダー */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo::before {
+            content: "📡";
+            font-size: 18px;
+        }
+
+        .space-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .space-info:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .space-badge {
+            background: #10b981;
+            color: white;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* クイックアクションバー */
+        .quick-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .quick-action {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            color: white;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .quick-action:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        /* ナビゲーション */
+        .navigation {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: relative;
+        }
+
+        .nav-item {
+            flex: 1;
+            padding: 12px 16px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item.active {
+            color: #3b82f6;
+        }
+
+        .nav-item.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            border-radius: 2px 2px 0 0;
+        }
+
+        .nav-item .count {
+            background: #ef4444;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 11px;
+            margin-left: 4px;
+            min-width: 18px;
+            display: inline-block;
+        }
+
+        /* メインコンテンツ */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .content-header {
+            background: white;
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .filter-button {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-button:hover {
+            background: #e5e7eb;
+        }
+
+        /* 通知リスト */
+        .notification-list {
+            padding: 0 16px 16px;
+        }
+
+        .notification-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification-item:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .notification-item.unread {
+            border-left: 4px solid #3b82f6;
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, white 20%);
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .notification-type {
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .notification-time {
+            font-size: 11px;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .notification-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .notification-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .project-tag {
+            background: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .issue-key {
+            color: #059669;
+            font-weight: 600;
+        }
+
+        /* 優先度インジケーター */
+        .priority-indicator {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        .priority-high {
+            border-width: 0 20px 20px 0;
+            border-color: transparent #ef4444 transparent transparent;
+        }
+
+        .priority-medium {
+            border-width: 0 20px 20px 0;
+            border-color: transparent #f59e0b transparent transparent;
+        }
+
+        /* アクションボタン */
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .notification-item:hover .notification-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            padding: 4px 8px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .action-btn.primary {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .action-btn.primary:hover {
+            background: #2563eb;
+        }
+
+        /* フッター */
+        .footer {
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .footer-btn {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .footer-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .footer-btn.primary {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+
+        .sync-status {
+            font-size: 11px;
+            color: #6b7280;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .sync-indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* スクロールバーのカスタマイズ */
+        .content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 2px;
+        }
+
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="popup-container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <div class="header-top">
+                <div class="logo">Backlog Antenna</div>
+                <div class="quick-actions">
+                    <button class="quick-action" title="設定">⚙️</button>
+                    <button class="quick-action" title="更新">🔄</button>
+                    <button class="quick-action" title="新しいタブで開く">↗️</button>
+                </div>
+            </div>
+            <div class="space-info">
+                <span>example.backlog.com</span>
+                <span class="space-badge">3</span>
+                <span>▼</span>
+            </div>
+        </header>
+
+        <!-- ナビゲーション -->
+        <nav class="navigation">
+            <button class="nav-item active">
+                お知らせ
+                <span class="count">5</span>
+            </button>
+            <button class="nav-item">プロジェクト</button>
+            <button class="nav-item">
+                課題
+                <span class="count">2</span>
+            </button>
+        </nav>
+
+        <!-- メインコンテンツ -->
+        <main class="content">
+            <div class="content-header">
+                <h2 class="content-title">お知らせ</h2>
+                <button class="filter-button">未読のみ 🔽</button>
+            </div>
+
+            <div class="notification-list">
+                <!-- 未読通知（高優先度） -->
+                <div class="notification-item unread">
+                    <div class="priority-indicator priority-high"></div>
+                    <div class="notification-header">
+                        <span class="notification-type">課題更新</span>
+                        <span class="notification-time">⏰ 5分前</span>
+                    </div>
+                    <h3 class="notification-title">ログイン機能のバグ修正が必要です</h3>
+                    <div class="notification-meta">
+                        <span class="project-tag">📊 WEBサイト</span>
+                        <span class="issue-key">WEB-1234</span>
+                        <span>👤 田中さん</span>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn primary">課題を開く</button>
+                        <button class="action-btn">既読にする</button>
+                    </div>
+                </div>
+
+                <!-- 未読通知（中優先度） -->
+                <div class="notification-item unread">
+                    <div class="priority-indicator priority-medium"></div>
+                    <div class="notification-header">
+                        <span class="notification-type">コメント</span>
+                        <span class="notification-time">⏰ 15分前</span>
+                    </div>
+                    <h3 class="notification-title">API仕様について質問があります</h3>
+                    <div class="notification-meta">
+                        <span class="project-tag">🔧 API開発</span>
+                        <span class="issue-key">API-567</span>
+                        <span>👤 佐藤さん</span>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn primary">返信する</button>
+                        <button class="action-btn">課題を開く</button>
+                    </div>
+                </div>
+
+                <!-- 未読通知 -->
+                <div class="notification-item unread">
+                    <div class="notification-header">
+                        <span class="notification-type">課題追加</span>
+                        <span class="notification-time">⏰ 1時間前</span>
+                    </div>
+                    <h3 class="notification-title">新機能のテスト項目を追加しました</h3>
+                    <div class="notification-meta">
+                        <span class="project-tag">🧪 QA</span>
+                        <span class="issue-key">QA-890</span>
+                        <span>👤 山田さん</span>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn primary">課題を開く</button>
+                        <button class="action-btn">既読にする</button>
+                    </div>
+                </div>
+
+                <!-- 既読通知 -->
+                <div class="notification-item">
+                    <div class="notification-header">
+                        <span class="notification-type">Wiki更新</span>
+                        <span class="notification-time">⏰ 3時間前</span>
+                    </div>
+                    <h3 class="notification-title">開発ガイドラインを更新しました</h3>
+                    <div class="notification-meta">
+                        <span class="project-tag">📚 ドキュメント</span>
+                        <span>👤 鈴木さん</span>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn primary">Wikiを開く</button>
+                    </div>
+                </div>
+
+                <!-- 既読通知 -->
+                <div class="notification-item">
+                    <div class="notification-header">
+                        <span class="notification-type">マイルストーン</span>
+                        <span class="notification-time">⏰ 5時間前</span>
+                    </div>
+                    <h3 class="notification-title">v2.0リリース準備完了</h3>
+                    <div class="notification-meta">
+                        <span class="project-tag">🚀 リリース</span>
+                        <span>👤 高橋さん</span>
+                    </div>
+                    <div class="notification-actions">
+                        <button class="action-btn primary">詳細を開く</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="footer">
+            <div class="sync-status">
+                <span class="sync-indicator"></span>
+                最終更新: 2分前
+            </div>
+            <div class="footer-actions">
+                <button class="footer-btn">すべて既読</button>
+                <button class="footer-btn primary">設定</button>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
