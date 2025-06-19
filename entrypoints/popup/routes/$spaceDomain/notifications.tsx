@@ -4,7 +4,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { Backlog } from "backlog-js";
 import { useCallback, useEffect, useRef } from "react";
 import { getSpaces } from "@/storages/spaces";
-import { getNotificationReasonText } from "@/utils/notifications";
+import { getStatusText } from "@/utils/notifications";
 
 export const Route = createFileRoute("/$spaceDomain/notifications")({
 	component: NotificationsPage,
@@ -213,7 +213,7 @@ function NotificationsPage() {
  * 個別のお知らせアイテムコンポーネント
  */
 function NotificationItem({ notification }: { notification: any }) {
-	const reasonText = getNotificationReasonText(notification.reason);
+	const reasonText = getStatusText(notification.reason);
 	const createdDate = new Date(notification.created).toLocaleString("ja-JP");
 
 	return (

@@ -1,32 +1,32 @@
 /**
- * お知らせリーズン番号に対応する日本語テキストを返す
- * @param reason Backlog APIから取得したお知らせのリーズン番号
- * @returns 日本語のリーズンテキスト
+ * 通知ステータスに対応する表示テキストを返す
+ * @param reason Backlog APIから取得した通知のステータス番号
+ * @returns 日本語のステータステキスト
  */
-export function getNotificationReasonText(reason: number): string {
+export function getStatusText(reason: number): string {
 	switch (reason) {
 		case 1:
-			return "課題が担当されました";
+			return "課題を担当";
 		case 2:
-			return "課題にコメントがありました";
+			return "課題にコメント";
 		case 3:
-			return "課題が追加されました";
+			return "課題を追加";
 		case 4:
-			return "課題が更新されました";
+			return "課題を更新";
 		case 5:
-			return "ファイルが追加されました";
+			return "ファイルを追加";
 		case 6:
-			return "プロジェクトにユーザーが追加されました";
+			return "メンバーを追加";
 		case 9:
 			return "その他";
 		case 10:
-			return "プルリクエストが担当されました";
+			return "プルリクエストを担当";
 		case 11:
-			return "プルリクエストにコメントが追加されました";
+			return "プルリクエストにコメント";
 		case 12:
-			return "プルリクエストが追加されました";
+			return "プルリクエストを追加";
 		case 13:
-			return "プルリクエストが更新されました";
+			return "プルリクエストを更新";
 		default:
 			return "不明な通知";
 	}
