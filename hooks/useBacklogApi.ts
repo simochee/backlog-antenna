@@ -16,30 +16,30 @@ export const useBacklogApi = () => {
 	if (!space && !isLoading) {
 		return {
 			api: null,
-			space: null,
-			isLoading: false,
 			error: new Error(`スペース ${spaceDomain} が見つかりません`),
+			isLoading: false,
+			space: null,
 		};
 	}
 
 	if (!space) {
 		return {
 			api: null,
-			space: null,
-			isLoading,
 			error: null,
+			isLoading,
+			space: null,
 		};
 	}
 
 	const api = new Backlog({
-		host: `https://${space.spaceDomain}`,
 		apiKey: space.apiKey,
+		host: space.spaceDomain,
 	});
 
 	return {
 		api,
-		space,
-		isLoading: false,
 		error: null,
+		isLoading: false,
+		space,
 	};
 };
