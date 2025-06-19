@@ -1,4 +1,5 @@
 import { createFileRoute, Navigate, notFound } from "@tanstack/react-router";
+import { getRouterState } from "@/storages/router";
 import { getSpaces } from "@/storages/spaces";
 
 const NoSpacePage: React.FC = () => (
@@ -17,28 +18,26 @@ const NoSpacePage: React.FC = () => (
 export const Route = createFileRoute("/")({
 	component: IndexPage,
 	loader: async () => {
+		const routerState = await getRouterState();
+
+		// 保存されたルーター状態があれば復元
+		if (routerState) {
+			return { redirectPath: routerState };
+		}
+
+		// フォールバック: スペースを取得して最初のスペースのnotificationsページ
 		const spaces = await getSpaces();
 
 		if (spaces.length === 0) {
 			throw notFound();
 		}
 
-		return { spaces };
+		return { redirectPath: `/${spaces[0].spaceDomain}/notifications` };
 	},
 	notFoundComponent: NoSpacePage,
 });
 
 function IndexPage() {
-	const { spaces } = Route.useLoaderData();
-
-	// TODO: storage.localから最後に表示していたルートを取得してリダイレクト
-	// 今は最初のスペースのnotificationsページにリダイレクト
-	const defaultSpace = spaces[0];
-	return (
-		<Navigate
-			params={{ spaceDomain: defaultSpace.spaceDomain }}
-			replace
-			to="/$spaceDomain/notifications"
-		/>
-	);
+	const { redirectPath } = Route.useLoaderData();
+	return <Navigate replace to={redirectPath} />;
 }
