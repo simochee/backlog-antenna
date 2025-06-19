@@ -3,13 +3,14 @@ import { parseWithValibot } from "@conform-to/valibot";
 import * as v from "valibot";
 
 const schema = v.object({
-	apiKey: v.optional(v.string()),
+	apiKey: v.string(),
 	spaceDomain: v.string(),
 });
 
 type FormSchema = v.InferOutput<typeof schema>;
 
 type Props = {
+	initialValue?: FormSchema;
 	onSubmit: (data: FormSchema) => Promise<void>;
 };
 
