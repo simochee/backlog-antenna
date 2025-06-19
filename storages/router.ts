@@ -12,8 +12,8 @@ const routerState = storage.defineItem<{ path: string | null }>(
  * @returns 最後に訪問したページのパス情報、または null
  */
 export const getRouterState = async () => {
-	const state = await routerState.getValue();
-	return state.path;
+	const { path } = await routerState.getValue();
+	return path;
 };
 
 /**
