@@ -1,88 +1,63 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useProjects } from "@/hooks/useProjects";
-import { useSpaces } from "@/hooks/useSpaces";
+import { Backlog } from "backlog-js";
+import { getSpaces } from "@/storages/spaces";
+import type { BacklogProject } from "@/types/project";
 
 export const Route = createFileRoute("/$spaceDomain/projects")({
 	component: ProjectsPage,
+	errorComponent: ({ reset }) => (
+		<div>
+			<h2 className="mb-4 font-bold text-gray-800 text-xl">プロジェクト一覧</h2>
+			<div className="text-center text-red-600">
+				プロジェクトの取得に失敗しました
+				<button
+					className="ml-2 rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
+					onClick={reset}
+					type="button"
+				>
+					再試行
+				</button>
+			</div>
+		</div>
+	),
+	loader: async ({ params: { spaceDomain } }) => {
+		const spaces = await getSpaces();
+		const currentSpace = spaces.find(
+			(space) => space.spaceDomain === spaceDomain,
+		);
+
+		if (!currentSpace) {
+			throw new Error(`Space with domain ${spaceDomain} not found`);
+		}
+
+		const backlog = new Backlog({
+			apiKey: currentSpace.apiKey,
+			host: spaceDomain,
+		});
+
+		const projects: BacklogProject[] = await backlog.getProjects();
+		return { projects };
+	},
+	pendingComponent: () => (
+		<div>
+			<h2 className="mb-4 font-bold text-gray-800 text-xl">プロジェクト一覧</h2>
+			<div className="text-center text-gray-600">
+				プロジェクトを読み込み中...
+			</div>
+		</div>
+	),
 });
 
 function ProjectsPage() {
-	const { spaceDomain } = Route.useParams();
-	const spaces = useSpaces();
-
-	// 現在のスペース情報を取得
-	const currentSpace = spaces.items.find(
-		(space) => space.spaceDomain === spaceDomain,
-	);
-
-	const projects = useProjects(spaceDomain, currentSpace?.apiKey ?? "");
-
-	if (spaces.isLoading) {
-		return (
-			<div>
-				<h2 className="mb-4 font-bold text-gray-800 text-xl">
-					プロジェクト一覧
-				</h2>
-				<div className="text-center text-gray-600">
-					スペース情報を読み込み中...
-				</div>
-			</div>
-		);
-	}
-
-	if (!currentSpace) {
-		return (
-			<div>
-				<h2 className="mb-4 font-bold text-gray-800 text-xl">
-					プロジェクト一覧
-				</h2>
-				<div className="text-center text-red-600">
-					スペース情報が見つかりません
-				</div>
-			</div>
-		);
-	}
-
-	if (projects.isLoading) {
-		return (
-			<div>
-				<h2 className="mb-4 font-bold text-gray-800 text-xl">
-					プロジェクト一覧
-				</h2>
-				<div className="text-center text-gray-600">
-					プロジェクトを読み込み中...
-				</div>
-			</div>
-		);
-	}
-
-	if (projects.error) {
-		return (
-			<div>
-				<h2 className="mb-4 font-bold text-gray-800 text-xl">
-					プロジェクト一覧
-				</h2>
-				<div className="text-center text-red-600">
-					プロジェクトの取得に失敗しました
-					<button
-						className="ml-2 rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
-						onClick={() => projects.refetch()}
-						type="button"
-					>
-						再試行
-					</button>
-				</div>
-			</div>
-		);
-	}
+	const { projects } = Route.useLoaderData();
 
 	return (
 		<div>
 			<h2 className="mb-4 font-bold text-gray-800 text-xl">プロジェクト一覧</h2>
 
-			{projects.data && projects.data.length > 0 ? (
+			{projects.length > 0 ? (
 				<div className="space-y-3">
-					{projects.data.map((project) => (
+					{projects.map((project) => (
 						<div
 							className="rounded border border-gray-200 bg-white p-4 shadow-sm"
 							key={project.id}
