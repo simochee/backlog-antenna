@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/$spaceKey/notifications")({
+export const Route = createFileRoute("/$spaceDomain/notifications")({
 	component: NotificationsPage,
 });
 

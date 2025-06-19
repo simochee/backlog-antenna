@@ -9,9 +9,9 @@ function IndexPage() {
 	// 今は仮で最初のスペースのnotificationsページにリダイレクト
 	return (
 		<Navigate
-			params={{ spaceKey: "example-space" }}
+			params={{ spaceDomain: "example-space" }}
 			replace
-			to="/$spaceKey/notifications"
+			to="/$spaceDomain/notifications"
 		/>
 	);
 }

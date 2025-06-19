@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/$spaceKey/issues")({
+export const Route = createFileRoute("/$spaceDomain/issues")({
 	component: IssuesPage,
 });
 
