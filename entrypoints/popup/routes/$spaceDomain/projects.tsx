@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Backlog, type Entity } from "backlog-js";
+import { Backlog } from "backlog-js";
 import { getSpaces } from "@/storages/spaces";
 
 export const Route = createFileRoute("/$spaceDomain/projects")({
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/$spaceDomain/projects")({
 			host: spaceDomain,
 		});
 
-		const projects: Entity.Project.Project[] = await backlog.getProjects();
+		const projects = await backlog.getProjects();
 		return { projects };
 	},
 	pendingComponent: () => (
