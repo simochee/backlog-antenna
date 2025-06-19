@@ -12,6 +12,14 @@ WXTフレームワーク、React、Tailwind CSSで構築されたブラウザ拡
 - `pnpm build` - 本番用に拡張機能をビルド
 - `pnpm postinstall` - Gitフックをインストールし、WXT環境を準備（`pnpm install`後に自動実行）
 
+### 開発向け環境変数
+
+- `WXT_INITIAL_SPACES` - 初期スペースを設定する環境変数
+  - フォーマット: `<spaceDomain>:<apiKey>,<spaceDomain>:<apiKey>,...`
+  - 例: `WXT_INITIAL_SPACES="example.backlog.com:your-api-key,another.backlog.jp:another-key"`
+  - 開発時にスペースを手動で追加する手間を省くために使用
+  - ストレージが空の場合のみ初期値として設定される
+
 ## コード品質とフォーマット
 
 - Biomeをリント・フォーマットに使用（lefthookのpre-commitフックで設定）
