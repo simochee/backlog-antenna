@@ -32,7 +32,7 @@ export const appendSpace = async (space: BacklogSpace) => {
  * @param space 更新するBacklogスペース情報
  * @throws 指定されたスペースドメインが存在しない場合
  */
-export const setSpace = async (
+export const updateSpace = async (
 	spaceDomain: string,
 	space: Omit<BacklogSpace, "spaceDomain">,
 ) => {
@@ -45,4 +45,21 @@ export const setSpace = async (
 
 	currentSpaces[index] = { ...currentSpaces[index], ...space };
 	await spaces.setValue(currentSpaces);
+};
+
+/**
+ * 指定されたスペースドメインのBacklogスペースを削除する
+ * @param spaceDomain 削除対象のスペースドメイン
+ * @throws 指定されたスペースドメインが存在しない場合
+ */
+export const deleteSpace = async (spaceDomain: string) => {
+	const currentSpaces = await spaces.getValue();
+	const index = currentSpaces.findIndex((s) => s.spaceDomain === spaceDomain);
+
+	if (index === -1) {
+		throw new Error(`Space with key ${spaceDomain} does not exist.`);
+	}
+
+	const updatedSpaces = currentSpaces.filter((_, i) => i !== index);
+	await spaces.setValue(updatedSpaces);
 };
