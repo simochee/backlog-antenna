@@ -1,12 +1,3 @@
 {
-	"compilerOptions": {
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["./*"],
-			"@background/*": ["./entrypoints/background/*"],
-			"@options/*": ["./entrypoints/options/*"],
-			"@popup/*": ["./entrypoints/popup/*"]
-		}
-	},
 	"extends": ["./.wxt/tsconfig.json", "@tsconfig/vite-react"]
 }

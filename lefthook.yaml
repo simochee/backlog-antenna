@@ -15,9 +15,3 @@ pre-commit:
           --no-errors-on-unmatched \
           --colors=off \
           {staged_files}
-
-    sort-package-json:
-      glob: package.json
-      run: |-
-        npx sort-package-json \
-        && git update-index --again
