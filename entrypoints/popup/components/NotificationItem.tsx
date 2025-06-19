@@ -1,13 +1,13 @@
 import { getStatusText } from "@/utils/notifications";
 
-type NotificationItemProps = {
+type Props = {
 	notification: any;
 };
 
 /**
  * 個別のお知らせアイテムコンポーネント
  */
-const NotificationItem: React.FC<NotificationItemProps> = ({ notification }) => {
+const NotificationItem: React.FC<Props> = ({ notification }) => {
 	const reasonText = getStatusText(notification.reason);
 	const createdDate = new Date(notification.created).toLocaleString("ja-JP");
 
