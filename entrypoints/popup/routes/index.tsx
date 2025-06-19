@@ -18,19 +18,21 @@ const NoSpacePage: React.FC = () => (
 export const Route = createFileRoute("/")({
 	component: IndexPage,
 	loader: async () => {
+		const routerState = await getRouterState();
+
+		// 保存されたルーター状態があれば復元
+		if (routerState) {
+			return { redirectPath: routerState };
+		}
+
+		// フォールバック: スペースを取得して最初のスペースのnotificationsページ
 		const spaces = await getSpaces();
 
 		if (spaces.length === 0) {
 			throw notFound();
 		}
 
-		const routerState = await getRouterState();
-
-		// 保存されたルーター状態があれば復元、なければフォールバック
-		const redirectPath =
-			routerState || `/${spaces[0].spaceDomain}/notifications`;
-
-		return { redirectPath };
+		return { redirectPath: `/${spaces[0].spaceDomain}/notifications` };
 	},
 	notFoundComponent: NoSpacePage,
 });
