@@ -1,11 +1,11 @@
 import type { BacklogSpace } from "@/types/space";
 
 /**
- * 初期スペース環境変数を解析してBacklogSpaceの配列に変換する
- * @param envValue 環境変数の値（<spaceDomain>:<apiKey>,<spaceDomain>:<apiKey>,...形式）
+ * WXT_INITIAL_SPACES環境変数から初期スペースを取得・解析する
  * @returns 解析されたBacklogSpaceの配列
  */
-export const parseInitialSpaces = (envValue: string): BacklogSpace[] => {
+export const getInitialSpaces = (): BacklogSpace[] => {
+	const envValue = import.meta.env.WXT_INITIAL_SPACES;
 	if (!envValue) {
 		return [];
 	}
@@ -40,13 +40,4 @@ export const parseInitialSpaces = (envValue: string): BacklogSpace[] => {
 	}
 
 	return spaces;
-};
-
-/**
- * WXT_INITIAL_SPACES環境変数から初期スペースを取得する
- * @returns 初期スペースの配列
- */
-export const getInitialSpaces = (): BacklogSpace[] => {
-	const envValue = import.meta.env.WXT_INITIAL_SPACES;
-	return parseInitialSpaces(envValue || "");
 };
