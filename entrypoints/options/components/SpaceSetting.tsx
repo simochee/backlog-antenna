@@ -1,34 +1,21 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { ComponentProps } from "react";
-import { appendSpace, getSpaces } from "@/storages/spaces";
+import { useSpaces } from "@/hooks/useSpaces";
 import { SpaceForm } from "./SpaceForm";
 import { SpaceItem } from "./SpaceItem";
 
 export const SpaceSetting: React.FC = () => {
-	const queryClient = useQueryClient();
-	const query = useQuery({
-		queryFn: getSpaces,
-		queryKey: ["spaces"],
-	});
-
-	const mutation = useMutation({
-		mutationFn: (async ({ spaceDomain, apiKey }) => {
-			if (typeof apiKey === "string") {
-				await appendSpace({ apiKey, spaceDomain });
-			}
-		}) satisfies ComponentProps<typeof SpaceForm>["onSubmit"],
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["spaces"] });
-		},
-	});
+	const spaces = useSpaces();
 
 	return (
 		<div>
-			<SpaceForm onSubmit={async (data) => mutation.mutate(data)} />
+			<SpaceForm onSubmit={async (data) => spaces.append(data)} />
 			<ul>
-				{query.data?.map((space) => (
+				{spaces.items.map((space) => (
 					<li key={space.spaceDomain}>
-						<SpaceItem onDelete={() => {}} onUpdate={() => {}} space={space} />
+						<SpaceItem
+							onDelete={() => spaces.remove(space.spaceDomain)}
+							onUpdate={(data) => spaces.update(data)}
+							space={space}
+						/>
 					</li>
 				))}
 			</ul>
