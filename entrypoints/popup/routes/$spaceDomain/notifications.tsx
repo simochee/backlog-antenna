@@ -1,9 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useInfiniteQuery } from "@tanstack/react-query";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { Backlog } from "backlog-js";
-import { useCallback, useEffect, useRef } from "react";
-import { getSpaces } from "@/storages/spaces";
+import { useEffect, useRef } from "react";
+import { useNotifications } from "@/hooks/useNotifications";
 import NotificationItem from "../../components/NotificationItem";
 
 export const Route = createFileRoute("/$spaceDomain/notifications")({
@@ -26,9 +24,7 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 	pendingComponent: () => (
 		<div>
 			<h2 className="mb-4 font-bold text-gray-800 text-xl">お知らせ一覧</h2>
-			<div className="text-center text-gray-600">
-				お知らせを読み込み中...
-			</div>
+			<div className="text-center text-gray-600">お知らせを読み込み中...</div>
 		</div>
 	),
 });
@@ -38,55 +34,25 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
  * TanStack Virtualで最適化された無限スクロールで自分宛のお知らせを表示する
  */
 function NotificationsPage() {
-	const { spaceDomain } = Route.useParams();
 	const parentRef = useRef<HTMLDivElement>(null);
 
 	const {
-		data,
-		fetchNextPage,
-		hasNextPage,
-		isFetchingNextPage,
+		items: notifications,
 		isLoading,
 		error,
-	} = useInfiniteQuery({
-		queryKey: ["notifications", spaceDomain],
-		queryFn: async ({ pageParam }) => {
-			const spaces = await getSpaces();
-			const currentSpace = spaces.find(
-				(space) => space.spaceDomain === spaceDomain,
-			);
+		hasNextPage,
+		isFetchingNextPage,
+		fetchNextPage,
+	} = useNotifications();
 
-			if (!currentSpace) {
-				throw new Error(`Space with domain ${spaceDomain} not found`);
-			}
-
-			const backlog = new Backlog({
-				apiKey: currentSpace.apiKey,
-				host: spaceDomain,
-			});
-
-			const notifications = await backlog.getNotifications({
-				count: 20,
-				order: "desc",
-				...(pageParam && { maxId: pageParam }),
-			});
-
-			return notifications;
-		},
-		getNextPageParam: (lastPage) => {
-			if (lastPage.length === 0) return undefined;
-			return lastPage[lastPage.length - 1].id;
-		},
-		initialPageParam: undefined as number | undefined,
-	});
-
-	const notifications = data?.pages.flat() || [];
-	
 	// 仮想化設定
 	const virtualizer = useVirtualizer({
-		count: notifications.length + (hasNextPage ? 1 : 0) + (isFetchingNextPage ? 1 : 0),
-		getScrollElement: () => parentRef.current,
+		count:
+			notifications.length +
+			(hasNextPage ? 1 : 0) +
+			(isFetchingNextPage ? 1 : 0),
 		estimateSize: () => 120,
+		getScrollElement: () => parentRef.current,
 		overscan: 5,
 	});
 
@@ -119,9 +85,7 @@ function NotificationsPage() {
 		return (
 			<div>
 				<h2 className="mb-4 font-bold text-gray-800 text-xl">お知らせ一覧</h2>
-				<div className="text-center text-gray-600">
-					お知らせを読み込み中...
-				</div>
+				<div className="text-center text-gray-600">お知らせを読み込み中...</div>
 			</div>
 		);
 	}
@@ -141,27 +105,25 @@ function NotificationsPage() {
 		return (
 			<div>
 				<h2 className="mb-4 font-bold text-gray-800 text-xl">お知らせ一覧</h2>
-				<div className="text-center text-gray-600">
-					お知らせがありません
-				</div>
+				<div className="text-center text-gray-600">お知らせがありません</div>
 			</div>
 		);
 	}
 
 	return (
-		<div>
+		<div className="p-4">
 			<h2 className="mb-4 font-bold text-gray-800 text-xl">お知らせ一覧</h2>
-			
+
 			<div
-				ref={parentRef}
 				className="overflow-auto"
+				ref={parentRef}
 				style={{ height: "400px" }}
 			>
 				<div
 					style={{
 						height: `${virtualizer.getTotalSize()}px`,
-						width: "100%",
 						position: "relative",
+						width: "100%",
 					}}
 				>
 					{items.map((virtualItem) => {
@@ -172,12 +134,12 @@ function NotificationsPage() {
 							<div
 								key={virtualItem.key}
 								style={{
+									height: `${virtualItem.size}px`,
+									left: 0,
 									position: "absolute",
 									top: 0,
-									left: 0,
-									width: "100%",
-									height: `${virtualItem.size}px`,
 									transform: `translateY(${virtualItem.start}px)`,
+									width: "100%",
 								}}
 							>
 								{isLoaderRow ? (
@@ -207,4 +169,3 @@ function NotificationsPage() {
 		</div>
 	);
 }
-
