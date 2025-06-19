@@ -1,9 +1,8 @@
-import type { FC } from "react";
 import { useSpaces } from "@/hooks/useSpaces";
 import { SpaceForm } from "./SpaceForm";
 import { SpaceItem } from "./SpaceItem";
 
-export const SpaceSetting: FC = () => {
+export const SpaceSetting: React.FC = () => {
 	const spaces = useSpaces();
 
 	return (

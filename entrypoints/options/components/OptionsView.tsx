@@ -1,7 +1,6 @@
-import type { FC } from "react";
 import { SpaceSetting } from "./SpaceSetting";
 
-export const OptionsView: FC = () => {
+export const OptionsView: React.FC = () => {
 	return (
 		<div>
 			<h2>スペース</h2>
