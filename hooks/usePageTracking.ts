@@ -1,22 +1,20 @@
-import { useLocation, useParams } from "@tanstack/react-router";
+import { useLocation } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { saveLastVisitedPage } from "@/storages/lastVisited";
+import { saveRouterState } from "@/storages/router";
 
 /**
  * ページ訪問状態を自動追跡するフック
  */
 export const usePageTracking = () => {
 	const location = useLocation();
-	const params = useParams({ from: "/$spaceDomain" });
 
 	useEffect(() => {
-		// スペースページの場合のみ追跡
-		if (params.spaceDomain) {
-			const path = location.pathname.replace(`/${params.spaceDomain}`, "");
-			// 有効なパスの場合のみ保存
-			if (["/notifications", "/projects", "/issues"].includes(path)) {
-				saveLastVisitedPage(params.spaceDomain, path);
-			}
+		// 有効なパスの場合のみ保存
+		const isValidPath = /^\/[^/]+\/(notifications|projects|issues)$/.test(
+			location.pathname,
+		);
+		if (isValidPath) {
+			saveRouterState(location.pathname);
 		}
-	}, [location.pathname, params.spaceDomain]);
+	}, [location.pathname]);
 };

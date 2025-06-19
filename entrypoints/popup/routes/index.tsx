@@ -1,5 +1,5 @@
 import { createFileRoute, Navigate, notFound } from "@tanstack/react-router";
-import { getLastVisitedPage } from "@/storages/lastVisited";
+import { getRouterState } from "@/storages/router";
 import { getSpaces } from "@/storages/spaces";
 
 const NoSpacePage: React.FC = () => (
@@ -24,29 +24,27 @@ export const Route = createFileRoute("/")({
 			throw notFound();
 		}
 
-		const lastVisited = await getLastVisitedPage();
+		const routerState = await getRouterState();
 
-		return { lastVisited, spaces };
+		return { routerState, spaces };
 	},
 	notFoundComponent: NoSpacePage,
 });
 
 function IndexPage() {
-	const { spaces, lastVisited } = Route.useLoaderData();
+	const { spaces, routerState } = Route.useLoaderData();
 
-	// 最後に訪問したページがあり、そのスペースが存在する場合は復元
-	if (lastVisited) {
+	// 保存されたルーター状態があり、そのスペースが存在する場合は復元
+	if (routerState) {
+		const pathSegments = routerState.path.split("/");
+		const spaceDomain = pathSegments[1];
+
 		const spaceExists = spaces.some(
-			(space) => space.spaceDomain === lastVisited.spaceDomain,
+			(space) => space.spaceDomain === spaceDomain,
 		);
 
 		if (spaceExists) {
-			return (
-				<Navigate
-					replace
-					to={`/${lastVisited.spaceDomain}${lastVisited.path}`}
-				/>
-			);
+			return <Navigate replace to={routerState.path} />;
 		}
 	}
 
