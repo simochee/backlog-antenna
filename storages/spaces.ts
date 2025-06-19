@@ -1,8 +1,9 @@
 import { storage } from "#imports";
 import type { BacklogSpace } from "@/types/space";
+import { getInitialSpaces } from "@/utils/initialSpaces";
 
 const spaces = storage.defineItem<BacklogSpace[]>("local:spaces", {
-	fallback: [],
+	fallback: getInitialSpaces(),
 });
 
 /**
