@@ -5,8 +5,9 @@ import { defineConfig } from "wxt";
 export default defineConfig({
 	manifest: {
 		default_locale: "ja",
-		name: "__MSG_ext_name__",
 		description: "__MSG_ext_description__",
+		name: "__MSG_ext_name__",
+		permissions: ["storage"],
 	},
 	modules: ["@wxt-dev/i18n/module", "@wxt-dev/auto-icons"],
 	vite: () => ({
@@ -14,10 +15,10 @@ export default defineConfig({
 			// biome-ignore lint/suspicious/noExplicitAny: TailwindCSS v4 は Vite 6 に未対応
 			tailwindcss() as any,
 			tanstackRouter({
-				routesDirectory: "./entrypoints/popup/routes",
-				generatedRouteTree: "./entrypoints/popup/routeTree.gen.ts",
-				target: "react",
 				autoCodeSplitting: true,
+				generatedRouteTree: "./entrypoints/popup/routeTree.gen.ts",
+				routesDirectory: "./entrypoints/popup/routes",
+				target: "react",
 			}),
 		],
 	}),

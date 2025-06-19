@@ -1,5 +1,15 @@
 {
 	"$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on",
+				"useSortedAttributes": "on",
+				"useSortedKeys": "on"
+			}
+		},
+		"enabled": true
+	},
 	"files": {
 		"ignoreUnknown": true
 	},
@@ -10,18 +20,10 @@
 	"linter": {
 		"enabled": true,
 		"rules": {
-			"recommended": true,
 			"nursery": {
 				"useSortedClasses": "info"
-			}
-		}
-	},
-	"assist": {
-		"enabled": true,
-		"actions": {
-			"source": {
-				"organizeImports": "on"
-			}
+			},
+			"recommended": true
 		}
 	}
 }
