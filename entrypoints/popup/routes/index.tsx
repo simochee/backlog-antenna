@@ -1,5 +1,4 @@
 import { createFileRoute, Navigate } from "@tanstack/react-router";
-import { useSpaces } from "@/hooks/useSpaces";
 
 export const Route = createFileRoute("/")({
 	component: IndexPage,
@@ -10,21 +9,11 @@ export const Route = createFileRoute("/")({
 });
 
 function IndexPage() {
-	const spaces = useSpaces();
-
-	if (spaces.isLoading) {
-		return (
-			<div className="flex min-h-screen items-center justify-center bg-gray-50">
-				<div className="text-center">
-					<div className="text-gray-600 text-lg">読み込み中...</div>
-				</div>
-			</div>
-		);
-	}
+	const { spaces } = Route.useLoaderData();
 
 	// スペースが存在しない場合はオプションページに遷移させる想定
 	// TODO: 実際のオプションページ実装後に適切なページに遷移
-	if (spaces.items.length === 0) {
+	if (spaces.length === 0) {
 		return (
 			<div className="flex min-h-screen items-center justify-center bg-gray-50">
 				<div className="text-center">
@@ -41,7 +30,7 @@ function IndexPage() {
 
 	// TODO: storage.localから最後に表示していたルートを取得してリダイレクト
 	// 今は最初のスペースのnotificationsページにリダイレクト
-	const defaultSpace = spaces.items[0];
+	const defaultSpace = spaces[0];
 	return (
 		<Navigate
 			params={{ spaceDomain: defaultSpace.spaceDomain }}
