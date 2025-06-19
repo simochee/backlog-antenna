@@ -63,3 +63,14 @@ export const deleteSpace = async (spaceDomain: string) => {
 	const updatedSpaces = currentSpaces.filter((_, i) => i !== index);
 	await spaces.setValue(updatedSpaces);
 };
+
+/**
+ * Backlogスペース配列の変更を監視する
+ * @param callback スペース配列が変更された際に実行されるコールバック関数
+ * @returns 監視を停止するための関数
+ */
+export const watchSpaces = (
+	callback: (newSpaces: BacklogSpace[], oldSpaces: BacklogSpace[]) => void,
+) => {
+	return spaces.watch(callback);
+};
