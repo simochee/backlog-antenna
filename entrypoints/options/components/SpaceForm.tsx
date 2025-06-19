@@ -1,5 +1,6 @@
 import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import { parseWithValibot } from "@conform-to/valibot";
+import type { FC } from "react";
 import * as v from "valibot";
 
 const schema = v.object({
@@ -14,7 +15,7 @@ type Props = {
 	onSubmit: (data: FormSchema) => Promise<void>;
 };
 
-export const SpaceForm: React.FC<Props> = ({ initialValue, onSubmit }) => {
+export const SpaceForm: FC<Props> = ({ initialValue, onSubmit }) => {
 	const [form, fields] = useForm<FormSchema>({
 		defaultValue: initialValue,
 		onSubmit: async (event, { submission }) => {

@@ -3,6 +3,10 @@ import { useSpaces } from "@/hooks/useSpaces";
 
 export const Route = createFileRoute("/")({
 	component: IndexPage,
+	loader: async () => {
+		const { getSpaces } = await import("@/storages/spaces");
+		return { spaces: await getSpaces() };
+	},
 });
 
 function IndexPage() {
@@ -37,10 +41,10 @@ function IndexPage() {
 
 	// TODO: storage.localから最後に表示していたルートを取得してリダイレクト
 	// 今は最初のスペースのnotificationsページにリダイレクト
-	const firstSpace = spaces.items[0];
+	const defaultSpace = spaces.items[0];
 	return (
 		<Navigate
-			params={{ spaceDomain: firstSpace.spaceDomain }}
+			params={{ spaceDomain: defaultSpace.spaceDomain }}
 			replace
 			to="/$spaceDomain/notifications"
 		/>

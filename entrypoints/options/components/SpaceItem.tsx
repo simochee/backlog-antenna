@@ -1,3 +1,4 @@
+import type { FC } from "react";
 import type { BacklogSpace } from "@/types/space";
 import { SpaceForm } from "./SpaceForm";
 
@@ -7,7 +8,7 @@ type Props = {
 	onUpdate: (data: BacklogSpace) => void;
 };
 
-export const SpaceItem: React.FC<Props> = ({ space, onDelete, onUpdate }) => {
+export const SpaceItem: FC<Props> = ({ space, onDelete, onUpdate }) => {
 	return (
 		<div>
 			<h3>{space.spaceDomain}</h3>
