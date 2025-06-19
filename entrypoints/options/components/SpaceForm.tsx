@@ -7,12 +7,14 @@ const schema = v.object({
 	spaceDomain: v.string(),
 });
 
+type FormSchema = v.InferOutput<typeof schema>;
+
 type Props = {
-	onSubmit: (data: v.InferOutput<typeof schema>) => Promise<void>;
+	onSubmit: (data: FormSchema) => Promise<void>;
 };
 
 export const SpaceForm: React.FC<Props> = ({ onSubmit }) => {
-	const [form, fields] = useForm({
+	const [form, fields] = useForm<FormSchema>({
 		onSubmit: async (event, { submission }) => {
 			event.preventDefault();
 
