@@ -28,7 +28,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 				<div className="min-w-0 flex-1">
 					<div className="flex items-center space-x-2">
 						<span className="font-medium text-blue-600 text-sm">
-							{notification.project?.name || "プロジェクト名不明"}
+							{notification.project.name}
 						</span>
 						{!notification.alreadyRead && (
 							<span className="h-2 w-2 rounded-full bg-red-500"></span>
@@ -43,7 +43,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 
 					<div className="mt-2 flex items-center justify-between">
 						<span className="text-gray-500 text-xs">
-							{notification.user?.name || "ユーザー名不明"}
+							{notification.sender?.name || "送信者不明"}
 						</span>
 						<span className="text-gray-500 text-xs">
 							{formatDate(notification.created)}

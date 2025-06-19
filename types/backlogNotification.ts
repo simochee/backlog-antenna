@@ -5,12 +5,12 @@ export type BacklogNotification = {
 	id: number;
 	alreadyRead: boolean;
 	reason: number;
-	user?: {
+	sender?: {
 		id: number;
 		userId: string;
 		name: string;
 	};
-	project?: {
+	project: {
 		id: number;
 		projectKey: string;
 		name: string;
