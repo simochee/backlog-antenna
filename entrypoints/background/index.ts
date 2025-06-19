@@ -10,7 +10,7 @@ export default defineBackground({
 
 		const setBadgeText = (count: number) => {
 			if (count <= 0) {
-				browserAction.setBadgeText({ text: undefined });
+				browserAction.setBadgeText({ text: `${count}` });
 				return;
 			}
 
@@ -44,6 +44,7 @@ export default defineBackground({
 					.reduce((sum, count) => sum + count, 0);
 
 				setBadgeText(totalCount);
+
 				browserAction.setBadgeBackgroundColor({
 					color: hasError ? "#ffb219" : "#fe1aaf",
 				});
