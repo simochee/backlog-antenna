@@ -36,7 +36,7 @@ function IndexPage() {
 
 	// 保存されたルーター状態があれば復元
 	if (routerState) {
-		return <Navigate replace to={routerState.path} />;
+		return <Navigate replace to={routerState} />;
 	}
 
 	// フォールバック: 最初のスペースのnotificationsページにリダイレクト

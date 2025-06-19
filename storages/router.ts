@@ -1,11 +1,6 @@
 import { storage } from "#imports";
 
-type RouterState = {
-	path: string;
-	updatedAt: number;
-};
-
-const routerState = storage.defineItem<RouterState | null>("local:router", {
+const routerState = storage.defineItem<string | null>("local:router", {
 	fallback: null,
 });
 
@@ -20,15 +15,5 @@ export const getRouterState = () => routerState.getValue();
  * @param path 完全なページパス
  */
 export const saveRouterState = async (path: string) => {
-	await routerState.setValue({
-		path,
-		updatedAt: Date.now(),
-	});
-};
-
-/**
- * ルーター状態をクリアする
- */
-export const clearRouterState = async () => {
-	await routerState.setValue(null);
+	await routerState.setValue(path);
 };
