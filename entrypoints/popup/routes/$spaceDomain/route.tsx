@@ -1,6 +1,6 @@
 import { createFileRoute, notFound, Outlet } from "@tanstack/react-router";
+import { NotFoundPage } from "@/entrypoints/popup/components/NotFoundPage";
 import { getSpaces } from "@/storages/spaces";
-import { NotFoundPage } from "../../components/NotFoundPage";
 
 export const Route = createFileRoute("/$spaceDomain")({
 	component: SpaceLayout,
