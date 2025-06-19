@@ -1,5 +1,5 @@
 import { Backlog } from "backlog-js";
-import type { BacklogNotification } from "@/types/notification";
+import type { BacklogNotification } from "@/types/backlogNotification";
 
 /**
  * 指定されたスペースの通知一覧を取得する
