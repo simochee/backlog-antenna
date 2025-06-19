@@ -6,7 +6,7 @@ import type { BacklogSpace } from "@/types/space";
  */
 export const getInitialSpaces = (): BacklogSpace[] => {
 	const envValue = import.meta.env.WXT_INITIAL_SPACES;
-	if (!envValue) return [];
+	if (typeof envValue !== "string") return [];
 
 	return envValue
 		.split(",")
