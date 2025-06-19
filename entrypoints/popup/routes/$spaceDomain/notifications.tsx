@@ -4,7 +4,7 @@ import { useVirtualizer } from "@tanstack/react-virtual";
 import { Backlog } from "backlog-js";
 import { useCallback, useEffect, useRef } from "react";
 import { getSpaces } from "@/storages/spaces";
-import NotificationItem from "@/entrypoints/popup/components/NotificationItem";
+import NotificationItem from "../../components/NotificationItem";
 
 export const Route = createFileRoute("/$spaceDomain/notifications")({
 	component: NotificationsPage,
