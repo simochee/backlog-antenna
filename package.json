@@ -5,6 +5,8 @@
 		"@headlessui/react": "^2.2.4",
 		"@tanstack/react-query": "^5.80.7",
 		"@tanstack/react-router": "^1.121.21",
+		"@tanstack/react-virtual": "^3.13.10",
+		"add": "^2.0.6",
 		"backlog-js": "^0.13.5",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",

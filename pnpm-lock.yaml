@@ -23,6 +23,12 @@ importers:
       '@tanstack/react-router':
         specifier: ^1.121.21
         version: 1.121.21(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      '@tanstack/react-virtual':
+        specifier: ^3.13.10
+        version: 3.13.10(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      add:
+        specifier: ^2.0.6
+        version: 2.0.6
       backlog-js:
         specifier: ^0.13.5
         version: 0.13.5
@@ -1230,6 +1236,9 @@ packages:
     resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+
+  add@2.0.6:
+    resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==}
 
   adm-zip@0.5.16:
     resolution: {integrity: sha512-TGw5yVi4saajsSEgz25grObGHEUaDrniwvA2qwSC060KfqGPdglhvPMA2lPIoxs3PQIItj2iag35fONcQqgUaQ==}
@@ -5037,6 +5046,8 @@ snapshots:
       through: 2.3.8
 
   acorn@8.14.1: {}
+
+  add@2.0.6: {}
 
   adm-zip@0.5.16: {}
 
