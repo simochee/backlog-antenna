@@ -1,105 +1,126 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef } from "react";
-import { useIssues } from "@/hooks/useIssues";
+import { useBacklogApi } from "@/hooks/useBacklogApi";
 
 export const Route = createFileRoute("/$spaceDomain/issues")({
-	component: IssuesPage,
-});
+	component: () => {
+		const backlogApi = useBacklogApi();
 
-function IssuesPage() {
-	const {
-		items: issues,
-		isLoading,
-		error,
-		hasNextPage,
-		isFetchingNextPage,
-		fetchNextPage,
-	} = useIssues();
+		const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+			useInfiniteQuery({
+				async queryFn({ pageParam }) {
+					const offset = pageParam === -1 ? 0 : pageParam;
 
-	const observerRef = useRef<IntersectionObserver | null>(null);
-	const loadMoreRef = useRef<HTMLDivElement | null>(null);
+					const items = await backlogApi.getRecentlyViewedIssues({
+						count: 50,
+						offset,
+						order: "desc",
+					});
 
-	useEffect(() => {
-		if (observerRef.current) {
-			observerRef.current.disconnect();
-		}
+					return items || [];
+				},
+				queryKey: ["recentlyViewedIssues"],
+				getNextPageParam(lastGroup, _allGroups, lastPageParam) {
+					const offset = lastPageParam === -1 ? 0 : lastPageParam;
+					return lastGroup.length === 50 ? offset + 50 : undefined;
+				},
+				initialPageParam: -1,
+			});
 
-		observerRef.current = new IntersectionObserver(
-			(entries) => {
-				if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
-					fetchNextPage();
-				}
-			},
-			{ threshold: 0.1 }
-		);
+		const items = data?.pages.flat() || [];
 
-		if (loadMoreRef.current) {
-			observerRef.current.observe(loadMoreRef.current);
-		}
+		const parentRef = useRef<HTMLDivElement>(null);
+		const virtualizer = useVirtualizer({
+			count: hasNextPage ? items.length + 1 : items.length,
+			estimateSize: () => 88,
+			getScrollElement: () => parentRef.current,
+			overscan: 5,
+		});
 
-		return () => {
-			if (observerRef.current) {
-				observerRef.current.disconnect();
+		useEffect(() => {
+			const lastItem = virtualizer.getVirtualItems().slice().pop();
+
+			if (!lastItem) {
+				return;
 			}
-		};
-	}, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-	if (error) {
+			if (
+				lastItem.index >= items.length - 1 &&
+				hasNextPage &&
+				!isFetchingNextPage
+			) {
+				fetchNextPage();
+			}
+		}, [
+			hasNextPage,
+			fetchNextPage,
+			items.length,
+			isFetchingNextPage,
+			virtualizer.getVirtualItems,
+		]);
+
 		return (
-			<div className="p-4">
-				<h2 className="mb-4 font-bold text-gray-800 text-xl">最近見た課題</h2>
-				<div className="text-red-600">
-					エラーが発生しました: {error.message}
-				</div>
+			<div className="h-popup-block overflow-auto" ref={parentRef}>
+				<ul
+					className="relative w-full"
+					style={{ height: `${virtualizer.getTotalSize()}px` }}
+				>
+					{virtualizer.getVirtualItems().map((virtualRow) => {
+						const isLoaderRow = virtualRow.index > items.length - 1;
+						const item = items[virtualRow.index];
+
+						return (
+							<li
+								className="absolute top-0 left-0 w-full"
+								key={virtualRow.key}
+								style={{
+									height: `${virtualRow.size}px`,
+									transform: `translateY(${virtualRow.start}px)`,
+								}}
+							>
+								{isLoaderRow ? (
+									<p>loading more...</p>
+								) : (
+									<div className="border-gray-200 border-b p-4 hover:bg-gray-50">
+										<div className="font-medium text-sm">{item.issueKey}</div>
+										<div className="text-gray-900 text-sm">{item.summary}</div>
+										<div className="mt-1 flex items-center gap-2 text-gray-500 text-xs">
+											<span>{item.status?.name}</span>
+											<span>•</span>
+											<span>{item.assignee?.name || "未割り当て"}</span>
+										</div>
+									</div>
+								)}
+							</li>
+						);
+					})}
+				</ul>
 			</div>
 		);
-	}
-
-	return (
-		<div className="p-4">
+	},
+	errorComponent: ({ reset }) => (
+		<div>
 			<h2 className="mb-4 font-bold text-gray-800 text-xl">最近見た課題</h2>
-			
-			{isLoading ? (
-				<div className="text-gray-600">読み込み中...</div>
-			) : (
-				<>
-					<div className="space-y-2">
-						{issues.map((issue) => (
-							<div
-								key={issue.id}
-								className="border rounded-lg p-3 hover:bg-gray-50"
-							>
-								<div className="font-medium text-sm">
-									{issue.issueKey}
-								</div>
-								<div className="text-gray-900 text-sm">
-									{issue.summary}
-								</div>
-								<div className="flex items-center gap-2 text-gray-500 text-xs mt-1">
-									<span>{issue.status?.name}</span>
-									<span>•</span>
-									<span>{issue.assignee?.name || "未割り当て"}</span>
-								</div>
-							</div>
-						))}
-					</div>
-
-					{hasNextPage && (
-						<div
-							ref={loadMoreRef}
-							className="py-4 text-center text-gray-600 text-sm"
-						>
-							{isFetchingNextPage ? "読み込み中..." : ""}
-						</div>
-					)}
-
-					{!hasNextPage && issues.length > 0 && (
-						<div className="py-4 text-center text-gray-500 text-sm">
-							すべての課題を表示しました
-						</div>
-					)}
-				</>
-			)}
+			<div className="text-center text-red-600">
+				最近見た課題の取得に失敗しました
+				<button
+					className="ml-2 rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
+					onClick={reset}
+					type="button"
+				>
+					再読み込み
+				</button>
+			</div>
 		</div>
-	);
-}
+	),
+	pendingComponent: () => (
+		<div>
+			<h2 className="mb-4 font-bold text-gray-800 text-xl">最近見た課題</h2>
+			<div className="text-center text-gray-600">
+				最近見た課題を読み込み中...
+			</div>
+		</div>
+	),
+});
