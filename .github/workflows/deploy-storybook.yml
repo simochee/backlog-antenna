@@ -37,7 +37,7 @@ jobs:
       - name: Build Storybook
         run: pnpm build-storybook --output-dir storybook-static
         env:
-          STORYBOOK_BASE_URL: /${{ github.event.repository.name }}/
+          STORYBOOK_BASE_URL: /$(basename ${{ github.repository }})/
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
