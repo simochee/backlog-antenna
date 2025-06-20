@@ -6,17 +6,8 @@ import { NotificationItem } from "./index";
  * 通知アイテムコンポーネントのStorybook定義
  */
 const meta = {
-	argTypes: {
-		notification: {
-			description: "表示する通知データ",
-		},
-	},
 	component: NotificationItem,
-	parameters: {
-		layout: "centered",
-	},
 	tags: ["autodocs"],
-	title: "Components/NotificationItem",
 } satisfies Meta<typeof NotificationItem>;
 
 export default meta;

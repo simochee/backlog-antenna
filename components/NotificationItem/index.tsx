@@ -40,8 +40,6 @@ type Props = {
 export const NotificationItem: React.FC<Props> = ({ notification }) => {
 	const reasonText = getReasonText(notification.reason);
 
-	notification.project.projectKey;
-
 	return (
 		<div className="grid grid-cols-[auto_1fr_auto] gap-3 p-4">
 			<img
