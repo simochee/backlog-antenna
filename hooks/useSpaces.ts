@@ -1,4 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+	useMutation,
+	useQueryClient,
+	useSuspenseQuery,
+} from "@tanstack/react-query";
 import {
 	appendSpace,
 	deleteSpace,
@@ -17,7 +21,7 @@ export const useSpaces = () => {
 	const queryClient = useQueryClient();
 
 	// スペース一覧取得
-	const spacesQuery = useQuery({
+	const spacesQuery = useSuspenseQuery({
 		queryFn: getSpaces,
 		queryKey: SPACES_QUERY_KEY,
 	});

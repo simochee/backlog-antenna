@@ -1,40 +1,90 @@
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useVirtualizer } from "@tanstack/react-virtual";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { NotificationItem } from "@/components/NotificationItem";
-import { useInfiniteNotifications } from "@/hooks/useInfiniteNotifications";
+import { useBacklogApi } from "@/hooks/useBacklogApi";
 
 export const Route = createFileRoute("/$spaceDomain/notifications")({
 	component: () => {
-		const { items } = useInfiniteNotifications();
+		const backlogApi = useBacklogApi();
+
+		const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+			useInfiniteQuery({
+				async queryFn({ pageParam }) {
+					const maxId = pageParam === -1 ? undefined : pageParam;
+
+					const items = await backlogApi.getNotifications({
+						count: 50,
+						maxId,
+					});
+
+					return items || [];
+				},
+				queryKey: ["notifications"],
+				getNextPageParam(lastGroup) {
+					const lastItem = lastGroup.slice().pop();
+					return lastItem ? lastItem.id : undefined;
+				},
+				initialPageParam: -1,
+			});
+
+		const items = data?.pages.flat() || [];
 
 		const parentRef = useRef<HTMLDivElement>(null);
-
 		const virtualizer = useVirtualizer({
-			count: items.length,
+			count: hasNextPage ? items.length + 1 : items.length,
 			estimateSize: () => 72,
 			getScrollElement: () => parentRef.current,
+			overscan: 5,
 		});
 
+		useEffect(() => {
+			const lastItem = virtualizer.getVirtualItems().slice().pop();
+
+			if (!lastItem) {
+				return;
+			}
+
+			if (
+				lastItem.index >= items.length - 1 &&
+				hasNextPage &&
+				!isFetchingNextPage
+			) {
+				fetchNextPage();
+			}
+		}, [
+			hasNextPage,
+			fetchNextPage,
+			items.length,
+			isFetchingNextPage,
+			virtualizer.getVirtualItems,
+		]);
+
 		return (
-			<div className="h-[600px] overflow-auto" ref={parentRef}>
+			<div className="h-[200px] overflow-auto" ref={parentRef}>
 				<ul
 					className="relative w-full"
 					style={{ height: `${virtualizer.getTotalSize()}px` }}
 				>
-					{virtualizer.getVirtualItems().map((virtualItem) => {
-						const item = items[virtualItem.index];
+					{virtualizer.getVirtualItems().map((virtualRow) => {
+						const isLoaderRow = virtualRow.index > items.length - 1;
+						const item = items[virtualRow.index];
 
 						return (
 							<li
 								className="absolute top-0 left-0 w-full"
-								key={item.id}
+								key={virtualRow.key}
 								style={{
-									height: `${virtualItem.size}px`,
-									transform: `translateY(${virtualItem.start}px)`,
+									height: `${virtualRow.size}px`,
+									transform: `translateY(${virtualRow.start}px)`,
 								}}
 							>
-								<NotificationItem notification={item} />
+								{isLoaderRow ? (
+									<p>loading more...</p>
+								) : (
+									<NotificationItem notification={item} />
+								)}
 							</li>
 						);
 					})}

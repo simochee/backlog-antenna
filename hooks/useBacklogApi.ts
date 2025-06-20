@@ -9,26 +9,12 @@ import { useSpaces } from "./useSpaces";
  */
 export const useBacklogApi = () => {
 	const { spaceDomain } = useParams({ strict: false });
-	const { items: spaces, isLoading, error } = useSpaces();
+	const spaces = useSpaces();
 
-	const space = spaces.find((s) => s.spaceDomain === spaceDomain);
-
-	if (!space && !isLoading) {
-		return {
-			api: null,
-			error: new Error(`スペース ${spaceDomain} が見つかりません`),
-			isLoading: false,
-			space: null,
-		};
-	}
+	const space = spaces.items.find((s) => s.spaceDomain === spaceDomain);
 
 	if (!space) {
-		return {
-			api: null,
-			error: null,
-			isLoading,
-			space: null,
-		};
+		throw new Error(`スペース ${spaceDomain} が見つかりません`);
 	}
 
 	const api = new Backlog({
@@ -36,10 +22,5 @@ export const useBacklogApi = () => {
 		host: space.spaceDomain,
 	});
 
-	return {
-		api,
-		error: null,
-		isLoading: false,
-		space,
-	};
+	return api;
 };
