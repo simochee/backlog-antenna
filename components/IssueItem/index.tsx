@@ -1,5 +1,5 @@
 import type { Entity } from "backlog-js";
-import { useCurrentSpace } from "@/hooks/useCurrentSpace";
+import { BacklogImage } from "../BacklogImage";
 import { StatusBadge } from "../StatusBadge";
 
 type Props = {
@@ -7,8 +7,6 @@ type Props = {
 };
 
 export const IssueItem: React.FC<Props> = ({ issue: { issue } }) => {
-	const { apiKey, spaceDomain } = useCurrentSpace();
-
 	return (
 		<button
 			type="button"
@@ -29,10 +27,10 @@ export const IssueItem: React.FC<Props> = ({ issue: { issue } }) => {
 			<span className="flex items-center gap-1">
 				{issue.assignee && (
 					<>
-						<img
+						<BacklogImage
+							className="size-4 rounded-full object-cover"
+							path={`/api/v2/users/${issue.assignee.id}/icon`}
 							alt=""
-							className="h-4 rounded-full object-cover"
-							src={`https://${spaceDomain}/api/v2/users/${issue.assignee.id}/icon?apiKey=${apiKey}`}
 						/>
 						<span>{issue.assignee.name}</span>
 					</>
