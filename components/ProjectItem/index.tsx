@@ -1,21 +1,31 @@
-import type { Entity } from "backlog-js";
-
 type Props = {
-	project: Entity.Project.Project;
+	projectKey: string;
+	name: string;
+	useWiki: boolean;
+	useFileSharing: boolean;
+	useSubversion: boolean;
+	useGit: boolean;
 };
 
-export const ProjectItem: React.FC<Props> = ({ project }) => {
+export const ProjectItem: React.FC<Props> = ({
+	projectKey,
+	name,
+	useWiki,
+	useFileSharing,
+	useSubversion,
+	useGit,
+}) => {
 	const navItems = [
 		{ action: "add", enabled: true, label: "課題の追加" },
 		{ action: "find", enabled: true, label: "課題" },
-		{ action: "wiki", enabled: project.useWiki, label: "Wiki" },
-		{ action: "file", enabled: project.useFileSharing, label: "ファイル" },
+		{ action: "wiki", enabled: useWiki, label: "Wiki" },
+		{ action: "file", enabled: useFileSharing, label: "ファイル" },
 		{
 			action: "subversion",
-			enabled: project.useSubversion,
+			enabled: useSubversion,
 			label: "Subversion",
 		},
-		{ action: "git", enabled: project.useGit, label: "Git" },
+		{ action: "git", enabled: useGit, label: "Git" },
 	].filter(({ enabled }) => enabled);
 
 	return (
@@ -29,8 +39,8 @@ export const ProjectItem: React.FC<Props> = ({ project }) => {
 				src="https://placehold.jp/320x320.png"
 			/>
 			<span className="flex items-end gap-1 self-center px-3 text-sm leading-none">
-				<span className="line-clamp-1">{project.name}</span>
-				<span className="text-2xs">({project.projectKey})</span>
+				<span className="line-clamp-1">{name}</span>
+				<span className="text-2xs">({projectKey})</span>
 			</span>
 			<span className="col-start-2 flex flex-wrap">
 				{navItems.map(({ action, label }) => (
