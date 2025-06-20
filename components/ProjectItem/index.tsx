@@ -20,7 +20,7 @@ export const ProjectItem: React.FC<Props> = ({ project }) => {
 
 	return (
 		<button
-			className="grid grid-cols-[auto_1fr] gap-y-1 p-4 hover:bg-yellow-50"
+			className="grid w-full grid-cols-[auto_1fr] gap-y-1 p-4 hover:bg-yellow-50"
 			type="button"
 		>
 			<img
