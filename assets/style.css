@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+@theme {
+    --spacing-popup-inline: 640px;
+    --spacing-popup-block: 600px;
+}
