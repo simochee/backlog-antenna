@@ -24,7 +24,7 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 				queryKey: ["notifications"],
 				getNextPageParam(lastGroup) {
 					const lastItem = lastGroup.slice().pop();
-					return lastItem ? lastItem.id : undefined;
+					return lastItem && lastGroup.length === 50 ? lastItem.id : undefined;
 				},
 				initialPageParam: -1,
 			});
