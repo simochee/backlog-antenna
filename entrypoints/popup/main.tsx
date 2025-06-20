@@ -8,7 +8,7 @@ import {
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { storage } from "#imports";
-import "./style.css";
+import "@/assets/style.css";
 import { routeTree } from "./routeTree.gen";
 
 // WXTストレージを使用したPersistorを作成
