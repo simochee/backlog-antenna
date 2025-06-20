@@ -1,4 +1,4 @@
-import { QueryClientProvider } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import {
 	createMemoryHistory,
 	createRouter,
@@ -7,7 +7,7 @@ import {
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@/assets/style.css";
-import { createQueryClient } from "@/utils/queryClient";
+import { persister, queryClient } from "@/utils/queryClient";
 import { routeTree } from "./routeTree.gen";
 
 const memoryHistory = createMemoryHistory({
@@ -25,8 +25,6 @@ declare module "@tanstack/react-router" {
 	}
 }
 
-const queryClient = createQueryClient();
-
 const rootEl = document.getElementById("root");
 
 if (!rootEl) {
@@ -36,8 +34,11 @@ if (!rootEl) {
 const root = createRoot(rootEl);
 root.render(
 	<StrictMode>
-		<QueryClientProvider client={queryClient}>
+		<PersistQueryClientProvider
+			client={queryClient}
+			persistOptions={{ persister }}
+		>
 			<RouterProvider router={router} />
-		</QueryClientProvider>
+		</PersistQueryClientProvider>
 	</StrictMode>,
 );

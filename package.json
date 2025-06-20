@@ -6,6 +6,7 @@
 		"@tanstack/query-async-storage-persister": "^5.80.10",
 		"@tanstack/query-persist-client-core": "^5.80.7",
 		"@tanstack/react-query": "^5.80.7",
+		"@tanstack/react-query-persist-client": "^5.80.10",
 		"@tanstack/react-router": "^1.121.21",
 		"@tanstack/react-router-devtools": "^1.121.27",
 		"@tanstack/react-virtual": "^3.13.10",

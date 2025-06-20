@@ -24,6 +24,7 @@ export const useSpaces = () => {
 	const spacesQuery = useSuspenseQuery({
 		queryFn: getSpaces,
 		queryKey: SPACES_QUERY_KEY,
+		gcTime: 1000 * 60 * 60 * 24,
 	});
 
 	// スペース追加

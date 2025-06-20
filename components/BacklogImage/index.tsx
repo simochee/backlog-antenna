@@ -1,27 +1,32 @@
+import clsx from "clsx";
 import { useCurrentSpace } from "@/hooks/useCurrentSpace";
-import { useImageCache } from "@/hooks/useImageCache";
 
 type Props = {
 	path: `/api/v2/${string}`;
 } & Omit<React.ComponentProps<"img">, "src">;
 
-export const BacklogImage: React.FC<Props> = ({ path, alt = "", ...props }) => {
+export const BacklogImage: React.FC<Props> = ({
+	path,
+	alt = "",
+	className,
+	...props
+}) => {
 	const { spaceDomain, apiKey } = useCurrentSpace();
-	const { data: src, isLoading } = useImageCache(path);
 
-	// フォールバック：データがない場合は直接URLを使用
-	const fallbackSrc = `https://${spaceDomain}${path}?apiKey=${apiKey}`;
+	/**
+	 * 画像がエラーになったら透明な png に置き換える
+	 */
+	const handleError: React.ReactEventHandler<HTMLImageElement> = (e) => {
+		e.currentTarget.src = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=`;
+	};
 
 	return (
 		<img
-			src={src || fallbackSrc}
-			alt={alt}
-			style={{
-				opacity: isLoading ? 0.7 : 1,
-				transition: "opacity 0.2s ease",
-				...props.style,
-			}}
 			{...props}
+			src={`https://${spaceDomain}${path}?apiKey=${apiKey}`}
+			alt={alt}
+			className={clsx("bg-gray-200", className)}
+			onError={handleError}
 		/>
 	);
 };

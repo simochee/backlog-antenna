@@ -42,35 +42,40 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 	const reasonText = getReasonText(notification.reason);
 
 	return (
-		<div className="grid grid-cols-[auto_1fr_auto] gap-3 p-4">
-			<BacklogImage
-				className="h-10 w-10 rounded-full object-cover"
-				path={`/api/v2/users/${notification.sender.id}/icon`}
-				alt=""
-			/>
+		<div className="grid grid-cols-[1fr_auto] gap-3 p-4">
 			<div className="grid gap-1">
-				<p className="line-clamp-1 text-gray-500 text-xs">
-					{notification.sender.name} さんが{reasonText[0]}{" "}
-					<span
-						className={
-							[6, 10, 11, 12, 13].includes(notification.reason)
-								? "text-pink-600"
-								: "text-brand-600"
-						}
-					>
-						{reasonText[1]}
-					</span>{" "}
-					{reasonText[2]}
-				</p>
-				<p className="line-clamp-1 text-sm">
-					{notification.issue &&
-						`${notification.project.projectKey}_${notification.issue.issueKey} ${notification.issue.summary}`}
-				</p>
-				{notification.comment && (
+				<div className="flex items-center gap-1">
+					<BacklogImage
+						className="size-4 rounded-full object-cover"
+						path={`/api/v2/users/${notification.sender.id}/icon`}
+						alt=""
+					/>
 					<p className="line-clamp-1 text-gray-500 text-xs">
-						{notification.comment.content}
+						{notification.sender.name} さんが{reasonText[0]}{" "}
+						<span
+							className={
+								[6, 10, 11, 12, 13].includes(notification.reason)
+									? "text-pink-600"
+									: "text-brand-600"
+							}
+						>
+							{reasonText[1]}
+						</span>{" "}
+						{reasonText[2]}
 					</p>
-				)}
+				</div>
+				<p className="line-clamp-1 text-sm">
+					{notification.issue
+						? notification.issue.summary
+						: notification.pullRequest
+							? notification.pullRequest.summary
+							: notification.project.name}
+				</p>
+				<p className="line-clamp-1 text-gray-500 text-xs">
+					{notification.issue
+						? `${notification.project.projectKey}_${notification.issue.issueKey}`
+						: notification.project.projectKey}
+				</p>
 			</div>
 			<div className="flex flex-col items-end gap-1">
 				<time className="text-gray-500 text-xs" dateTime={notification.created}>

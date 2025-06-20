@@ -27,6 +27,7 @@ export const Route = createFileRoute("/$spaceDomain/issues")({
 					return lastGroup.length === 50 ? offset + 50 : undefined;
 				},
 				initialPageParam: -1,
+				gcTime: 0,
 			});
 
 		const items = data?.pages.flat() || [];
