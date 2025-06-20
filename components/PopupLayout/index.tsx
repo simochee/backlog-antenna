@@ -23,18 +23,18 @@ export const PopupLayout: React.FC<Props> = ({ children }) => {
 	const { spaceDomain } = useParams({ strict: false });
 
 	return (
-		<div className="grid h-full grid-cols-[120px_1fr]">
-			<aside className="bg-brand-400">
+		<div className="grid h-full grid-cols-[180px_1fr]">
+			<aside className="bg-brand-500">
 				{spaceDomain && (
-					<nav className="grid pl-1">
+					<nav className="grid">
 						{NAV_LINKS.map(({ text, path }) => (
 							<Link
 								key={path}
 								to={`/$spaceDomain/${path}`}
 								params={{ spaceDomain }}
-								className="grid h-8 items-center rounded-l-lg px-2"
+								className="grid h-12 items-center px-2 font-bold"
 								inactiveProps={{ className: "text-white" }}
-								activeProps={{ className: "bg-white text-black" }}
+								activeProps={{ className: "bg-base text-brand-500" }}
 							>
 								{text}
 							</Link>

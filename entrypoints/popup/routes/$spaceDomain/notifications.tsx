@@ -62,7 +62,10 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 		]);
 
 		return (
-			<div className="h-popup-block overflow-auto" ref={parentRef}>
+			<div
+				className="scrollbar-brand h-popup-block overflow-auto"
+				ref={parentRef}
+			>
 				<ul
 					className="relative w-full"
 					style={{ height: `${virtualizer.getTotalSize()}px` }}
