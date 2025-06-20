@@ -1,8 +1,7 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
-import { useVirtualizer } from "@tanstack/react-virtual";
-import { useEffect, useRef } from "react";
 import { NotificationItem } from "@/components/NotificationItem";
+import { VirtualList } from "@/components/VirtualList";
 import { useBacklogApi } from "@/hooks/useBacklogApi";
 
 export const Route = createFileRoute("/$spaceDomain/notifications")({
@@ -10,7 +9,7 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 		const backlogApi = useBacklogApi();
 
 		const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
-			useInfiniteQuery({
+			useSuspenseInfiniteQuery({
 				async queryFn({ pageParam }) {
 					const maxId = pageParam === -1 ? undefined : pageParam;
 
@@ -31,68 +30,17 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 
 		const items = data?.pages.flat() || [];
 
-		const parentRef = useRef<HTMLDivElement>(null);
-		const virtualizer = useVirtualizer({
-			count: hasNextPage ? items.length + 1 : items.length,
-			estimateSize: () => 72,
-			getScrollElement: () => parentRef.current,
-			overscan: 5,
-		});
-
-		useEffect(() => {
-			const lastItem = virtualizer.getVirtualItems().slice().pop();
-
-			if (!lastItem) {
-				return;
-			}
-
-			if (
-				lastItem.index >= items.length - 1 &&
-				hasNextPage &&
-				!isFetchingNextPage
-			) {
-				fetchNextPage();
-			}
-		}, [
-			hasNextPage,
-			fetchNextPage,
-			items.length,
-			isFetchingNextPage,
-			virtualizer.getVirtualItems,
-		]);
-
 		return (
-			<div
-				className="scrollbar-brand h-popup-block overflow-auto"
-				ref={parentRef}
-			>
-				<ul
-					className="relative w-full"
-					style={{ height: `${virtualizer.getTotalSize()}px` }}
-				>
-					{virtualizer.getVirtualItems().map((virtualRow) => {
-						const isLoaderRow = virtualRow.index > items.length - 1;
-						const item = items[virtualRow.index];
-
-						return (
-							<li
-								className="absolute top-0 left-0 w-full"
-								key={virtualRow.key}
-								style={{
-									height: `${virtualRow.size}px`,
-									transform: `translateY(${virtualRow.start}px)`,
-								}}
-							>
-								{isLoaderRow ? (
-									<p>loading more...</p>
-								) : (
-									<NotificationItem notification={item} />
-								)}
-							</li>
-						);
-					})}
-				</ul>
-			</div>
+			<VirtualList
+				count={items.length}
+				estimateSize={() => 88}
+				renderItem={({ index }) => (
+					<NotificationItem notification={items[index]} />
+				)}
+				onLoadNextPage={fetchNextPage}
+				isFetchingNextPage={isFetchingNextPage}
+				hasNextPage={hasNextPage}
+			/>
 		);
 	},
 	errorComponent: ({ reset }) => (
