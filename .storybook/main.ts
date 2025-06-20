@@ -15,7 +15,7 @@ const config: StorybookConfig = {
 		options: {},
 	},
 	staticDirs: ["../public"],
-	stories: ["../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+	stories: ["../src/**/*.stories.tsx"],
 	typescript: {
 		check: true,
 		reactDocgen: "react-docgen-typescript",
