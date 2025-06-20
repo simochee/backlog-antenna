@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { storage } from "wxt/storage";
 import { useCurrentSpace } from "@/hooks/useCurrentSpace";
+import { getCachedImage, setCachedImage } from "@/storages/image-caches";
 
 type Props = {
 	path: `/api/v2/${string}`;
@@ -11,13 +11,12 @@ export const BacklogImage: React.FC<Props> = ({ path, alt = "", ...props }) => {
 	const [cachedUrl, setCachedUrl] = useState<string | null>(null);
 
 	useEffect(() => {
-		const cacheKey = `image:${spaceDomain}${path}`;
 		const imageUrl = `https://${spaceDomain}${path}?apiKey=${apiKey}`;
 
 		// キャッシュから取得を試行
 		const loadCachedImage = async () => {
 			try {
-				const cached = await storage.getItem<string>(`local:${cacheKey}`);
+				const cached = await getCachedImage(spaceDomain, path);
 				if (cached) {
 					setCachedUrl(cached);
 					return;
@@ -31,10 +30,8 @@ export const BacklogImage: React.FC<Props> = ({ path, alt = "", ...props }) => {
 					reader.onload = async () => {
 						const base64 = reader.result as string;
 						setCachedUrl(base64);
-						// ストレージにキャッシュ（24時間後に期限切れ）
-						await storage.setItem(`local:${cacheKey}`, base64, {
-							maxAge: 24 * 60 * 60 * 1000, // 24時間
-						});
+						// ストレージにキャッシュ
+						await setCachedImage(spaceDomain, path, base64);
 					};
 					reader.readAsDataURL(blob);
 				} else {
