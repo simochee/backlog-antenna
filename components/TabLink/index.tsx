@@ -10,6 +10,7 @@ export const TabLink: React.FC<Props> = ({ href, onClick, ...props }) => {
 			return;
 		}
 
+		e.preventDefault();
 		e.stopPropagation();
 
 		const [tab] = await browser.tabs.query({ url: href });
