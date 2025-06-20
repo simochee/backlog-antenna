@@ -1,3 +1,4 @@
+import type { Entity } from "backlog-js";
 import { clsx } from "clsx";
 import TimeAgo from "javascript-time-ago";
 import ja from "javascript-time-ago/locale/ja";
@@ -33,29 +34,11 @@ const getReasonText = (reason: number): [string, string, string] => {
 };
 
 type Props = {
-	reason: number;
-	projectKey: string;
-	issueKey: string;
-	issueSummary: string;
-	statusName: string;
-	statusColor: string;
-	commentContent: string | undefined;
-	senderName: string;
-	created: string;
+	notification: Entity.Notification.Notification;
 };
 
-export const NotificationItem: React.FC<Props> = ({
-	reason,
-	projectKey,
-	issueKey,
-	issueSummary,
-	statusName,
-	statusColor,
-	commentContent,
-	senderName,
-	created,
-}) => {
-	const reasonText = getReasonText(reason);
+export const NotificationItem: React.FC<Props> = ({ notification }) => {
+	const reasonText = getReasonText(notification.reason);
 
 	return (
 		<div className="grid grid-cols-[auto_1fr_auto] gap-3 p-4">
@@ -66,10 +49,10 @@ export const NotificationItem: React.FC<Props> = ({
 			/>
 			<div className="grid gap-1">
 				<p className="line-clamp-1 text-gray-500 text-xs">
-					{senderName} さんが{reasonText[0]}{" "}
+					{notification.sender.name} さんが{reasonText[0]}{" "}
 					<span
 						className={
-							[6, 10, 11, 12, 13].includes(reason)
+							[6, 10, 11, 12, 13].includes(notification.reason)
 								? "text-pink-600"
 								: "text-brand-600"
 						}
@@ -79,29 +62,32 @@ export const NotificationItem: React.FC<Props> = ({
 					{reasonText[2]}
 				</p>
 				<p className="line-clamp-1 text-sm">
-					{commentContent ?? `${projectKey}_${issueKey} ${issueSummary}`}
+					{notification.issue &&
+						`${notification.project.projectKey}_${notification.issue.issueKey} ${notification.issue.summary}`}
 				</p>
-				{commentContent && (
+				{notification.comment && (
 					<p className="line-clamp-1 text-gray-500 text-xs">
-						{commentContent ?? `${projectKey}_${issueKey} ${issueSummary}`}
+						{notification.comment.content}
 					</p>
 				)}
 			</div>
 			<div className="flex flex-col items-end gap-1">
-				<time className="text-gray-500 text-xs" dateTime={created}>
-					{timeAgo.format(new Date(created), "round-minute")}
+				<time className="text-gray-500 text-xs" dateTime={notification.created}>
+					{timeAgo.format(new Date(notification.created), "round-minute")}
 				</time>
-				<p
-					className={clsx(
-						"line-clamp-1 max-w-32 rounded-full px-2 text-center text-xs leading-relaxed",
-						tinycolor(statusColor).getLuminance() < 0.5
-							? "text-white"
-							: "text-black",
-					)}
-					style={{ backgroundColor: statusColor }}
-				>
-					{statusName}
-				</p>
+				{notification.issue && (
+					<p
+						className={clsx(
+							"line-clamp-1 max-w-32 rounded-full px-2 text-center text-xs leading-relaxed",
+							tinycolor(notification.issue.status.color).getLuminance() < 0.5
+								? "text-white"
+								: "text-black",
+						)}
+						style={{ backgroundColor: notification.issue.status.color }}
+					>
+						{notification.issue.status.name}
+					</p>
+				)}
 			</div>
 		</div>
 	);

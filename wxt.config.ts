@@ -10,6 +10,7 @@ export default defineConfig({
 		permissions: ["alarms", "storage"],
 	},
 	modules: ["@wxt-dev/i18n/module", "@wxt-dev/auto-icons"],
+	imports: false,
 	vite: () => ({
 		plugins: [
 			// biome-ignore lint/suspicious/noExplicitAny: TailwindCSS v4 は Vite 6 に未対応
