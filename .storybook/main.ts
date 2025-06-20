@@ -1,4 +1,6 @@
 import type { StorybookConfig } from "@storybook/react-vite";
+import tailwindcss from "@tailwindcss/vite";
+import { mergeConfig } from "vite";
 
 const config: StorybookConfig = {
 	addons: [
@@ -18,6 +20,14 @@ const config: StorybookConfig = {
 	typescript: {
 		check: true,
 		reactDocgen: "react-docgen-typescript",
+	},
+	async viteFinal(config) {
+		return mergeConfig(config, {
+			plugins: [
+				// biome-ignore lint/suspicious/noExplicitAny: TailwindCSS v4 は Vite 6 に未対応
+				tailwindcss() as any,
+			],
+		});
 	},
 };
 
