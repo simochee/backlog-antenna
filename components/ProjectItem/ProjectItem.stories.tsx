@@ -1,16 +1,49 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Entity } from "backlog-js";
 import { ProjectItem } from "./index";
+
+// Storybook用のargs型定義
+type StoryArgs = {
+	name: string;
+	projectKey: string;
+	useWiki: boolean;
+	useFileSharing: boolean;
+	useSubversion: boolean;
+	useGit: boolean;
+};
 
 /**
  * プロジェクトアイテムコンポーネントのStorybook定義
  */
 const meta = {
-	component: ProjectItem,
+	render: (args: StoryArgs) => {
+		// argsをEntity.Project.Projectオブジェクトにマッピング
+		const project: Entity.Project.Project = {
+			archived: false,
+			chartEnabled: true,
+			displayOrder: 0,
+			id: 1,
+			name: args.name,
+			projectKey: args.projectKey,
+			projectLeaderCanEditProjectLeader: true,
+			subtaskingEnabled: true,
+			textFormattingRule: "markdown",
+			useDevAttributes: false,
+			useFileSharing: args.useFileSharing,
+			useGit: args.useGit,
+			useResolvedForChart: true,
+			useSubversion: args.useSubversion,
+			useWiki: args.useWiki,
+			useWikiTreeView: true,
+		};
+
+		return <ProjectItem project={project} />;
+	},
 	tags: ["autodocs"],
-} satisfies Meta<typeof ProjectItem>;
+} satisfies Meta<StoryArgs>;
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<StoryArgs>;
 
 // 基本的なプロジェクトデータ
 const baseArgs = {
