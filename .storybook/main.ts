@@ -19,12 +19,6 @@ const config: StorybookConfig = {
 		check: true,
 		reactDocgen: "react-docgen-typescript",
 	},
-	viteFinal: async (config) => {
-		if (process.env.STORYBOOK_BASE_URL) {
-			config.base = process.env.STORYBOOK_BASE_URL;
-		}
-		return config;
-	},
 };
 
 export default config;

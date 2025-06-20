@@ -22,7 +22,6 @@
 		"@storybook/addon-docs": "^9.0.12",
 		"@storybook/addon-links": "^9.0.12",
 		"@storybook/react-vite": "^9.0.12",
-		"@storybook/test-runner": "^0.23.0",
 		"@tailwindcss/vite": "^4.1.10",
 		"@tanstack/router-plugin": "^1.121.22",
 		"@tsconfig/vite-react": "^6.3.6",
@@ -30,7 +29,6 @@
 		"@types/react-dom": "^19.1.6",
 		"@wxt-dev/auto-icons": "^1.0.2",
 		"@wxt-dev/i18n": "^0.2.4",
-		"axe-playwright": "^2.1.0",
 		"lefthook": "^1.11.14",
 		"semantic-release": "^24.2.5",
 		"storybook": "^9.0.12",
@@ -45,8 +43,7 @@
 		"build-storybook": "storybook build",
 		"dev": "wxt",
 		"postinstall": "lefthook install && wxt prepare",
-		"storybook": "storybook dev -p 6006",
-		"test-storybook": "test-storybook"
+		"storybook": "storybook dev -p 6006"
 	},
 	"type": "module",
 	"version": "2.0.0"
