@@ -7,6 +7,7 @@
 		"@tanstack/query-persist-client-core": "^5.80.7",
 		"@tanstack/react-query": "^5.80.7",
 		"@tanstack/react-router": "^1.121.21",
+		"@tanstack/react-router-devtools": "^1.121.27",
 		"@tanstack/react-virtual": "^3.13.10",
 		"backlog-js": "^0.13.5",
 		"clsx": "^2.1.1",
