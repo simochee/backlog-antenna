@@ -2,6 +2,7 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useEffect, useRef } from "react";
+import { IssueItem } from "@/components/IssueItem";
 import { useBacklogApi } from "@/hooks/useBacklogApi";
 
 export const Route = createFileRoute("/$spaceDomain/issues")({
@@ -34,7 +35,7 @@ export const Route = createFileRoute("/$spaceDomain/issues")({
 		const parentRef = useRef<HTMLDivElement>(null);
 		const virtualizer = useVirtualizer({
 			count: hasNextPage ? items.length + 1 : items.length,
-			estimateSize: () => 88,
+			estimateSize: () => 80,
 			getScrollElement: () => parentRef.current,
 			overscan: 5,
 		});
@@ -83,15 +84,7 @@ export const Route = createFileRoute("/$spaceDomain/issues")({
 								{isLoaderRow ? (
 									<p>loading more...</p>
 								) : (
-									<div className="border-gray-200 border-b p-4 hover:bg-gray-50">
-										<div className="font-medium text-sm">{item.issueKey}</div>
-										<div className="text-gray-900 text-sm">{item.summary}</div>
-										<div className="mt-1 flex items-center gap-2 text-gray-500 text-xs">
-											<span>{item.status?.name}</span>
-											<span>•</span>
-											<span>{item.assignee?.name || "未割り当て"}</span>
-										</div>
-									</div>
+									<IssueItem issue={item} />
 								)}
 							</li>
 						);
