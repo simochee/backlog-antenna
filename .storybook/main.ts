@@ -2,10 +2,9 @@ import type { StorybookConfig } from "@storybook/react-vite";
 
 const config: StorybookConfig = {
 	addons: [
-		"@storybook/addon-essentials",
 		"@storybook/addon-links",
-		"@storybook/addon-interactions",
 		"@storybook/addon-a11y",
+		"@storybook/addon-docs",
 	],
 	core: {
 		disableTelemetry: true,
