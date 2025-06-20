@@ -1,8 +1,8 @@
-import type { Notification } from "backlog-js";
+import type { Entity } from "backlog-js";
 import { getStatusText } from "@/utils/backlog";
 
 type Props = {
-	notification: Notification;
+	notification: Entity.Notification.Notification;
 };
 
 /**
