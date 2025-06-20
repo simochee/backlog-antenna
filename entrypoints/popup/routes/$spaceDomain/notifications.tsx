@@ -34,7 +34,7 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 		return (
 			<VirtualList
 				count={items.length}
-				estimateSize={() => 88}
+				estimateSize={() => 76}
 				renderItem={({ index }) => (
 					<NotificationItem notification={items[index]} />
 				)}

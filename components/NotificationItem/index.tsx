@@ -53,7 +53,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 	return (
 		<TabLink
 			href={`https://${spaceDomain}${path}`}
-			className="grid grid-cols-[1fr_auto] gap-3 p-4 hover:bg-yellow-50"
+			className="grid grid-cols-[1fr_auto] gap-3 px-4 py-2 hover:bg-yellow-50"
 		>
 			<div className="grid gap-1">
 				<div className="flex items-center gap-1">

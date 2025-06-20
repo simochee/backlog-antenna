@@ -54,7 +54,7 @@ export const VirtualList: React.FC<Props> = ({
 			className="scrollbar-brand h-popup-block overflow-scroll py-2 pr-1 pl-2"
 		>
 			<ul
-				className="relative w-full rounded border-1 border-gray-300 bg-white"
+				className="relative w-full overflow-hidden rounded border-1 border-gray-300 bg-white"
 				style={{ height: `${virtualizer.getTotalSize()}px` }}
 			>
 				{virtualizer.getVirtualItems().map((virtualItem) => {
