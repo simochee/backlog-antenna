@@ -7,29 +7,16 @@ import { storage } from "#imports";
  * TanStack Query用のAsyncStoragePersister実装
  * WXT storageを使用してQueryClientの永続化を行う
  */
-const wxtAsyncStorage = {
+const WxtAsyncStorage = {
 	getItem: async (key: string) => {
-		try {
-			const value = await storage.getItem(`local:${key}`);
-			return value || null;
-		} catch (error) {
-			console.error("Failed to get item from storage:", error);
-			return null;
-		}
+		const value = await storage.getItem(`local:${key}`);
+		return value || null;
 	},
 	removeItem: async (key: string) => {
-		try {
-			await storage.removeItem(`local:${key}`);
-		} catch (error) {
-			console.error("Failed to remove item from storage:", error);
-		}
+		await storage.removeItem(`local:${key}`);
 	},
 	setItem: async (key: string, value: string) => {
-		try {
-			await storage.setItem(`local:${key}`, value);
-		} catch (error) {
-			console.error("Failed to set item to storage:", error);
-		}
+		await storage.setItem(`local:${key}`, value);
 	},
 };
 
@@ -39,7 +26,7 @@ const wxtAsyncStorage = {
 export const createQueryClient = () => {
 	const persister = createAsyncStoragePersister({
 		key: "react-query-cache",
-		storage: wxtAsyncStorage,
+		storage: WxtAsyncStorage,
 	});
 
 	const queryClient = new QueryClient({
