@@ -33,7 +33,6 @@ const getReasonText = (reason: number): [string, string, string] => {
 };
 
 type Props = {
-	alreadyRead: boolean;
 	reason: number;
 	projectKey: string;
 	issueKey: string;
@@ -41,13 +40,11 @@ type Props = {
 	statusName: string;
 	statusColor: string;
 	commentContent: string | undefined;
-	senderUserId: string;
 	senderName: string;
 	created: string;
 };
 
 export const NotificationItem: React.FC<Props> = ({
-	alreadyRead,
 	reason,
 	projectKey,
 	issueKey,
@@ -55,7 +52,6 @@ export const NotificationItem: React.FC<Props> = ({
 	statusName,
 	statusColor,
 	commentContent,
-	senderUserId,
 	senderName,
 	created,
 }) => {
