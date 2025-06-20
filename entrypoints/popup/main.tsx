@@ -1,13 +1,31 @@
 import { QueryClientProvider } from "@tanstack/react-query";
-import { RouterProvider } from "@tanstack/react-router";
+import {
+	createMemoryHistory,
+	createRouter,
+	RouterProvider,
+} from "@tanstack/react-router";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "@/assets/style.css";
 import { createQueryClient } from "@/utils/queryClient";
-import { createAppRouter } from "@/utils/router";
+import { routeTree } from "./routeTree.gen";
 
 const queryClient = createQueryClient();
-const router = createAppRouter();
+
+const memoryHistory = createMemoryHistory({
+	initialEntries: ["/"],
+});
+
+const router = createRouter({
+	history: memoryHistory,
+	routeTree,
+});
+
+declare module "@tanstack/react-router" {
+	interface Register {
+		router: typeof router;
+	}
+}
 
 const rootEl = document.getElementById("root");
 
