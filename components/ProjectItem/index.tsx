@@ -1,10 +1,13 @@
 import type { Entity } from "backlog-js";
+import { useCurrentSpace } from "@/hooks/useCurrentSpace";
 
 type Props = {
 	project: Entity.Project.Project;
 };
 
 export const ProjectItem: React.FC<Props> = ({ project }) => {
+	const { apiKey, spaceDomain } = useCurrentSpace();
+
 	const navItems = [
 		{ action: "add", enabled: true, label: "課題の追加" },
 		{ action: "find", enabled: true, label: "課題" },
@@ -25,8 +28,8 @@ export const ProjectItem: React.FC<Props> = ({ project }) => {
 		>
 			<img
 				alt=""
-				className="h-7 w-7 object-cover"
-				src="https://placehold.jp/320x320.png"
+				className="size-7 object-cover"
+				src={`https://${spaceDomain}/api/v2/projects/${project.id}/icon?apiKey=${apiKey}`}
 			/>
 			<span className="flex items-end gap-1 self-center px-3 text-sm leading-none">
 				<span className="line-clamp-1">{project.name}</span>

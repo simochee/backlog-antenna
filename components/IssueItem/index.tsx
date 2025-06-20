@@ -1,4 +1,5 @@
 import type { Entity } from "backlog-js";
+import { useCurrentSpace } from "@/hooks/useCurrentSpace";
 import { StatusBadge } from "../StatusBadge";
 
 type Props = {
@@ -6,6 +7,8 @@ type Props = {
 };
 
 export const IssueItem: React.FC<Props> = ({ issue: { issue } }) => {
+	const { apiKey, spaceDomain } = useCurrentSpace();
+
 	return (
 		<button
 			type="button"
@@ -27,9 +30,9 @@ export const IssueItem: React.FC<Props> = ({ issue: { issue } }) => {
 				{issue.assignee && (
 					<>
 						<img
-							className="size-4 rounded-full"
-							src="https://placehold.jp/320x320.png"
 							alt=""
+							className="h-4 rounded-full object-cover"
+							src={`https://${spaceDomain}/api/v2/users/${issue.assignee.id}/icon?apiKey=${apiKey}`}
 						/>
 						<span>{issue.assignee.name}</span>
 					</>

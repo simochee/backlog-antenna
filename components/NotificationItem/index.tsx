@@ -3,6 +3,7 @@ import { clsx } from "clsx";
 import TimeAgo from "javascript-time-ago";
 import ja from "javascript-time-ago/locale/ja";
 import tinycolor from "tinycolor2";
+import { useCurrentSpace } from "@/hooks/useCurrentSpace";
 
 TimeAgo.addLocale(ja);
 const timeAgo = new TimeAgo("ja-JP");
@@ -38,6 +39,8 @@ type Props = {
 };
 
 export const NotificationItem: React.FC<Props> = ({ notification }) => {
+	const { apiKey, spaceDomain } = useCurrentSpace();
+
 	const reasonText = getReasonText(notification.reason);
 
 	return (
@@ -45,7 +48,7 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 			<img
 				alt=""
 				className="h-10 w-10 rounded-full object-cover"
-				src={"https://placehold.jp/320x320.png"}
+				src={`https://${spaceDomain}/api/v2/users/${notification.sender.id}/icon?apiKey=${apiKey}`}
 			/>
 			<div className="grid gap-1">
 				<p className="line-clamp-1 text-gray-500 text-xs">
