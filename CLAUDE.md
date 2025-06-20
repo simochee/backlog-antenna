@@ -183,6 +183,89 @@ WXTフレームワーク、React、Tailwind CSSで構築されたブラウザ拡
 
 - / : 設定項目一覧
 
+## テスト戦略（将来実装予定）
+
+### 推奨テストツール
+
+#### Unit Testing
+- **Vitest** (v2.1.8+) - Viteベースの高速テストランナー
+- **@vitest/ui** - テスト結果のビジュアル表示
+- **jsdom** - ブラウザ環境のシミュレーション
+
+#### Component Testing  
+- **@testing-library/react** (v16.1.0+) - ユーザー中心のコンポーネントテスト
+- **@testing-library/jest-dom** - DOM要素のマッチャー拡張
+- **@testing-library/user-event** - ユーザーインタラクションのシミュレーション
+
+#### E2E Testing
+- **@playwright/test** (v1.49.1+) - クロスブラウザE2Eテスト
+- **puppeteer** (v23.12.0+) - ブラウザ拡張機能特化テスト
+
+#### API Mocking
+- **msw** (v2.8.0+) - Backlog API呼び出しのモック化
+
+### テスト観点
+
+#### 1. Unit Testing
+- **Custom Hooks**: useNotifications、useIssues、useBacklogApiのロジック検証
+- **Utility Functions**: backlog.tsのステータス変換、日付処理など
+- **ページネーション**: minIdベースの無限スクロール実装
+- **キャッシュ戦略**: 3分間staleTime、セッション中gcTime設定
+
+#### 2. Integration Testing
+- **API Integration**: 認証フロー（API Key、OAuth2）、Rate Limit対応
+- **Storage Integration**: storage.localの読み書き、データ整合性
+- **Query管理**: TanStack Queryのキャッシュ・無効化戦略
+
+#### 3. Component Testing
+- **仮想化コンポーネント**: TanStack Virtual無限スクロールの描画・操作
+- **Router Integration**: TanStack Routerのナビゲーション、状態永続化
+- **エラーハンドリング**: ローディング・エラー状態の適切な表示
+
+#### 4. E2E Testing
+- **拡張機能ライフサイクル**: インストール・設定・利用の完全フロー
+- **権限管理**: manifest.json権限、storage.local、タブアクセス
+- **クロスブラウザ**: Chrome・Firefox両対応の動作確認
+
+### 段階的導入計画
+
+#### Phase 1: 基盤整備（1-2週間）
+- Vitest + React Testing Library環境構築
+- MSWによるAPI Mock環境整備
+- 基本的なテスト設定とCI/CD統合
+
+#### Phase 2: Core機能テスト（2-3週間）
+- Custom Hooks単体テスト実装
+- 重要コンポーネント（無限スクロール）テスト
+- API統合テストの網羅的実装
+
+#### Phase 3: E2E拡張（2-3週間）
+- Playwright環境構築
+- ブラウザ拡張機能E2Eテスト実装
+- ビジュアルリグレッションテスト導入
+
+#### Phase 4: 継続改善（継続）
+- テストカバレッジ向上
+- パフォーマンステスト追加
+- 新機能開発時のテストファースト開発
+
+### 期待される効果
+
+#### 開発効率向上
+- リグレッション防止による安心したリファクタリング
+- 自動テスト実行による品質保証の効率化
+- バグ発見の早期化とデバッグ工数削減
+
+#### 保守性向上
+- テストコードによるLiving Documentation
+- 仕様変更時の影響範囲明確化
+- エッジケースの体系的な検証
+
+#### 品質保証強化
+- カバレッジ可視化による網羅性確保
+- クロスブラウザでの動作保証
+- ユーザー体験に近い統合テスト
+
 ## Urls
 
 - [Backlog ヘルプセンター](https://support-ja.backlog.com/hc/ja)
