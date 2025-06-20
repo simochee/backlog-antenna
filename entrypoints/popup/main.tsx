@@ -11,33 +11,54 @@ import { storage } from "#imports";
 import "@/assets/style.css";
 import { routeTree } from "./routeTree.gen";
 
-// WXTストレージを使用したPersistorを作成
-const persister = {
-	persistClient: async (client: unknown) => {
-		await storage.setItem("local:react-query-cache", client);
-	},
-	removeClient: async () => {
-		await storage.removeItem("local:react-query-cache");
-	},
-	restoreClient: async () => {
-		return await storage.getItem("local:react-query-cache");
-	},
+/**
+ * WXT storageを使用したAsyncStoragePersister
+ */
+const createAsyncStoragePersister = () => {
+	return {
+		persistClient: async (client: unknown) => {
+			try {
+				const serialized = JSON.stringify(client);
+				await storage.setItem("local:react-query-cache", serialized);
+			} catch (error) {
+				console.error("Failed to persist query client:", error);
+			}
+		},
+		removeClient: async () => {
+			try {
+				await storage.removeItem("local:react-query-cache");
+			} catch (error) {
+				console.error("Failed to remove query client:", error);
+			}
+		},
+		restoreClient: async () => {
+			try {
+				const serialized = await storage.getItem("local:react-query-cache");
+				return serialized ? JSON.parse(serialized) : undefined;
+			} catch (error) {
+				console.error("Failed to restore query client:", error);
+				return undefined;
+			}
+		},
+	};
 };
+
+const persister = createAsyncStoragePersister();
 
 const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
-			gcTime: 24 * 60 * 60 * 1000, // 3分間キャッシュ
-			staleTime: 3 * 60 * 1000, // 24時間保持
+			gcTime: 24 * 60 * 60 * 1000, // 24時間保持
+			staleTime: 3 * 60 * 1000, // 3分間キャッシュ
 		},
 	},
 });
 
 // QueryClientを永続化
 persistQueryClient({
-	maxAge: 24 * 60 * 60 * 1000,
+	maxAge: 24 * 60 * 60 * 1000, // 24時間
 	persister,
-	queryClient, // 24時間
+	queryClient,
 });
 
 const memoryHistory = createMemoryHistory({
