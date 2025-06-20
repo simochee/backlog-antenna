@@ -45,7 +45,7 @@ export const ProjectItem: React.FC<Props> = ({ project }) => {
 				path={`/api/v2/projects/${project.id}/icon`}
 				alt=""
 			/>
-			<span className="flex items-end gap-1 self-center px-3 text-sm leading-none">
+			<span className="flex items-end gap-1 self-center px-3 text-sm leading-normal">
 				<span className="line-clamp-1">{project.name}</span>
 				<span className="text-2xs">({project.projectKey})</span>
 			</span>

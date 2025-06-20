@@ -51,7 +51,7 @@ export const VirtualList: React.FC<Props> = ({
 	return (
 		<div
 			ref={parentRef}
-			className="scrollbar-brand h-popup-block overflow-auto py-2 pr-1 pl-2"
+			className="scrollbar-brand h-popup-block overflow-scroll py-2 pr-1 pl-2"
 		>
 			<ul
 				className="relative w-full rounded border-1 border-gray-300 bg-white"
@@ -63,7 +63,7 @@ export const VirtualList: React.FC<Props> = ({
 					return (
 						<li
 							key={virtualItem.key}
-							className="absolute top-0 left-0 w-full border-gray-300 not-first:border-t even:bg-gray-100"
+							className="absolute top-0 left-0 w-full border-gray-300 not-first:border-t even:bg-gray-50"
 							style={{
 								height: `${virtualItem.size}px`,
 								transform: `translateY(${virtualItem.start}px)`,
