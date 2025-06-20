@@ -8,8 +8,11 @@
 		"@tanstack/react-router": "^1.121.21",
 		"@tanstack/react-virtual": "^3.13.10",
 		"backlog-js": "^0.13.5",
+		"clsx": "^2.1.1",
+		"javascript-time-ago": "^2.5.11",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
+		"tinycolor2": "^1.6.0",
 		"valibot": "^1.1.0"
 	},
 	"devDependencies": {
@@ -27,6 +30,7 @@
 		"@tsconfig/vite-react": "^6.3.6",
 		"@types/react": "^19.1.8",
 		"@types/react-dom": "^19.1.6",
+		"@types/tinycolor2": "^1.4.6",
 		"@wxt-dev/auto-icons": "^1.0.2",
 		"@wxt-dev/i18n": "^0.2.4",
 		"lefthook": "^1.11.14",

@@ -1,4 +1,11 @@
 import type { Entity } from "backlog-js";
+import { clsx } from "clsx";
+import TimeAgo from "javascript-time-ago";
+import ja from "javascript-time-ago/locale/ja";
+import tinycolor from "tinycolor2";
+
+TimeAgo.addLocale(ja);
+const timeAgo = new TimeAgo("ja-JP");
 
 /** ステータスメッセージのテキストを取得 */
 const getReasonText = (reason: number): [string, string, string] => {
@@ -33,8 +40,10 @@ type Props = {
 export const NotificationItem: React.FC<Props> = ({ notification }) => {
 	const reasonText = getReasonText(notification.reason);
 
+	notification.project.projectKey;
+
 	return (
-		<div className="grid grid-cols-[auto,1fr,auto] gap-3 p-4">
+		<div className="grid grid-cols-[auto_1fr_auto] gap-3 p-4">
 			<img
 				alt=""
 				className="h-10 w-10 rounded-full object-cover"
@@ -54,30 +63,32 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 					</span>{" "}
 					{reasonText[2]}
 				</p>
-				{/* <p className="line-clamp-1 text-sm">
-          {notification.comment?.content ?? `${projectKey}_${issueKey} ${issueSummary}`}
-        </p>
-        {commentContent && (
-          <p className="line-clamp-1 text-gray-500 text-xs">
-            {projectKey}_{issueKey} {issueSummary}
-          </p>
-        )}
-      </div>
-      <div className="flex flex-col items-end gap-1">
-        <time className="text-gray-500 text-xs" dateTime={created}>
-          {timeAgo.format(new Date(created), "round-minute")}
-        </time>
-        <p
-          className={clsx(
-            "line-clamp-1 max-w-32 rounded-full px-2 text-center text-xs leading-relaxed",
-            tinycolor(statusColor).getLuminance() < 0.5
-              ? "text-white"
-              : "text-black",
-          )}
-          style={{ backgroundColor: statusColor }}
-        >
-          {statusName}
-        </p> */}
+				<p className="line-clamp-1 text-sm">
+					{notification.comment?.content ??
+						`${notification.project.projectKey}_${notification.issue?.issueKey} ${notification.issue?.summary}`}
+				</p>
+				{notification.comment?.content && (
+					<p className="line-clamp-1 text-gray-500 text-xs">
+						{notification.comment?.content ??
+							`${notification.project.projectKey}_${notification.issue?.issueKey} ${notification.issue?.summary}`}
+					</p>
+				)}
+			</div>
+			<div className="flex flex-col items-end gap-1">
+				<time className="text-gray-500 text-xs" dateTime={notification.created}>
+					{timeAgo.format(new Date(notification.created), "round-minute")}
+				</time>
+				<p
+					className={clsx(
+						"line-clamp-1 max-w-32 rounded-full px-2 text-center text-xs leading-relaxed",
+						tinycolor(notification.issue?.status.color).getLuminance() < 0.5
+							? "text-white"
+							: "text-black",
+					)}
+					style={{ backgroundColor: notification.issue?.status.color }}
+				>
+					{notification.issue?.status.name}
+				</p>
 			</div>
 		</div>
 	);
