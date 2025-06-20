@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { Entity } from "backlog-js";
 import { ProjectItem } from "./index";
 
 /**
@@ -13,24 +12,14 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// 基本的なプロジェクトデータのモック
-const baseProject: Entity.Project.Project = {
-	archived: false,
-	chartEnabled: true,
-	displayOrder: 0,
-	id: 1,
+// 基本的なプロジェクトデータ
+const baseArgs = {
 	name: "サンプルプロジェクト",
 	projectKey: "SAMPLE",
-	projectLeaderCanEditProjectLeader: true,
-	subtaskingEnabled: true,
-	textFormattingRule: "markdown",
-	useDevAttributes: false,
 	useFileSharing: true,
 	useGit: false,
-	useResolvedForChart: true,
 	useSubversion: false,
 	useWiki: true,
-	useWikiTreeView: true,
 };
 
 /**
@@ -38,13 +27,11 @@ const baseProject: Entity.Project.Project = {
  */
 export const DefaultProject: Story = {
 	args: {
-		project: {
-			...baseProject,
-			useFileSharing: true,
-			useGit: true,
-			useSubversion: true,
-			useWiki: true,
-		},
+		...baseArgs,
+		useFileSharing: true,
+		useGit: true,
+		useSubversion: true,
+		useWiki: true,
 	},
 };
 
@@ -53,15 +40,13 @@ export const DefaultProject: Story = {
  */
 export const MinimalProject: Story = {
 	args: {
-		project: {
-			...baseProject,
-			name: "最小構成プロジェクト",
-			projectKey: "MIN",
-			useFileSharing: false,
-			useGit: false,
-			useSubversion: false,
-			useWiki: false,
-		},
+		...baseArgs,
+		name: "最小構成プロジェクト",
+		projectKey: "MIN",
+		useFileSharing: false,
+		useGit: false,
+		useSubversion: false,
+		useWiki: false,
 	},
 };
 
@@ -70,15 +55,13 @@ export const MinimalProject: Story = {
  */
 export const WikiEnabledProject: Story = {
 	args: {
-		project: {
-			...baseProject,
-			name: "Wiki使用プロジェクト",
-			projectKey: "WIKI",
-			useFileSharing: false,
-			useGit: false,
-			useSubversion: false,
-			useWiki: true,
-		},
+		...baseArgs,
+		name: "Wiki使用プロジェクト",
+		projectKey: "WIKI",
+		useFileSharing: false,
+		useGit: false,
+		useSubversion: false,
+		useWiki: true,
 	},
 };
 
@@ -87,15 +70,13 @@ export const WikiEnabledProject: Story = {
  */
 export const FileSharingEnabledProject: Story = {
 	args: {
-		project: {
-			...baseProject,
-			name: "ファイル共有プロジェクト",
-			projectKey: "FILE",
-			useFileSharing: true,
-			useGit: false,
-			useSubversion: false,
-			useWiki: false,
-		},
+		...baseArgs,
+		name: "ファイル共有プロジェクト",
+		projectKey: "FILE",
+		useFileSharing: true,
+		useGit: false,
+		useSubversion: false,
+		useWiki: false,
 	},
 };
 
@@ -104,15 +85,13 @@ export const FileSharingEnabledProject: Story = {
  */
 export const GitEnabledProject: Story = {
 	args: {
-		project: {
-			...baseProject,
-			name: "Git使用プロジェクト",
-			projectKey: "GIT",
-			useFileSharing: false,
-			useGit: true,
-			useSubversion: false,
-			useWiki: false,
-		},
+		...baseArgs,
+		name: "Git使用プロジェクト",
+		projectKey: "GIT",
+		useFileSharing: false,
+		useGit: true,
+		useSubversion: false,
+		useWiki: false,
 	},
 };
 
@@ -121,15 +100,13 @@ export const GitEnabledProject: Story = {
  */
 export const SubversionEnabledProject: Story = {
 	args: {
-		project: {
-			...baseProject,
-			name: "SVN使用プロジェクト",
-			projectKey: "SVN",
-			useFileSharing: false,
-			useGit: false,
-			useSubversion: true,
-			useWiki: false,
-		},
+		...baseArgs,
+		name: "SVN使用プロジェクト",
+		projectKey: "SVN",
+		useFileSharing: false,
+		useGit: false,
+		useSubversion: true,
+		useWiki: false,
 	},
 };
 
@@ -138,15 +115,13 @@ export const SubversionEnabledProject: Story = {
  */
 export const LongNameProject: Story = {
 	args: {
-		project: {
-			...baseProject,
-			name: "非常に長いプロジェクト名を持つプロジェクトのサンプルケース",
-			projectKey: "LONG_NAME_PROJ",
-			useFileSharing: true,
-			useGit: true,
-			useSubversion: false,
-			useWiki: true,
-		},
+		...baseArgs,
+		name: "非常に長いプロジェクト名を持つプロジェクトのサンプルケース",
+		projectKey: "LONG_NAME_PROJ",
+		useFileSharing: true,
+		useGit: true,
+		useSubversion: false,
+		useWiki: true,
 	},
 };
 
@@ -155,15 +130,12 @@ export const LongNameProject: Story = {
  */
 export const ArchivedProject: Story = {
 	args: {
-		project: {
-			...baseProject,
-			archived: true,
-			name: "アーカイブ済みプロジェクト",
-			projectKey: "ARCH",
-			useFileSharing: true,
-			useGit: false,
-			useSubversion: false,
-			useWiki: true,
-		},
+		...baseArgs,
+		name: "アーカイブ済みプロジェクト",
+		projectKey: "ARCH",
+		useFileSharing: true,
+		useGit: false,
+		useSubversion: false,
+		useWiki: true,
 	},
 };
