@@ -13,14 +13,15 @@ export const Route = createFileRoute("/$spaceDomain/issues")({
 				async queryFn({ pageParam }) {
 					const offset = pageParam === -1 ? 0 : pageParam;
 
-					const items = await backlogApi.getIssues({
+					const items = await backlogApi.getRecentlyViewedIssues({
 						count: 50,
 						offset,
+						order: "desc",
 					});
 
 					return items || [];
 				},
-				queryKey: ["issues"],
+				queryKey: ["recentlyViewedIssues"],
 				getNextPageParam(lastGroup, _allGroups, lastPageParam) {
 					const offset = lastPageParam === -1 ? 0 : lastPageParam;
 					return lastGroup.length === 50 ? offset + 50 : undefined;
@@ -101,9 +102,9 @@ export const Route = createFileRoute("/$spaceDomain/issues")({
 	},
 	errorComponent: ({ reset }) => (
 		<div>
-			<h2 className="mb-4 font-bold text-gray-800 text-xl">課題一覧</h2>
+			<h2 className="mb-4 font-bold text-gray-800 text-xl">最近見た課題</h2>
 			<div className="text-center text-red-600">
-				課題の取得に失敗しました
+				最近見た課題の取得に失敗しました
 				<button
 					className="ml-2 rounded bg-blue-500 px-3 py-1 text-white hover:bg-blue-600"
 					onClick={reset}
@@ -116,8 +117,10 @@ export const Route = createFileRoute("/$spaceDomain/issues")({
 	),
 	pendingComponent: () => (
 		<div>
-			<h2 className="mb-4 font-bold text-gray-800 text-xl">課題一覧</h2>
-			<div className="text-center text-gray-600">課題を読み込み中...</div>
+			<h2 className="mb-4 font-bold text-gray-800 text-xl">最近見た課題</h2>
+			<div className="text-center text-gray-600">
+				最近見た課題を読み込み中...
+			</div>
 		</div>
 	),
 });
