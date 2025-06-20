@@ -4,8 +4,24 @@
     --spacing-popup-inline: 640px;
     --spacing-popup-block: 600px;
 
+    --color-base: #f0f0f0;
     --color-brand-100: #edf4f0;
     --color-brand-200: #ddefe5;
     --color-brand-400: #43ce9f;
+    --color-brand-500: #4caf93;
     --color-brand-600: #2c9a7a;
+
+    --text-2xs: 10px;
+}
+
+@layer component {
+    .scrollbar-brand {
+        scrollbar-width: thin;
+        scrollbar-color: var(--color-brand-200) transparent;
+        transition: scrollbar-color 0.2s ease;
+    }
+
+    .scrollbar-brand:hover {
+        scrollbar-color: var(--color-brand-400) transparent;
+    }
 }
