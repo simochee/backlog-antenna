@@ -19,7 +19,6 @@ type StoryArgs = {
  * 通知アイテムコンポーネントのStorybook定義
  */
 const meta = {
-	component: NotificationItem,
 	render: (args: StoryArgs) => {
 		// argsをEntity.Notification.Notificationオブジェクトにマッピング
 		const notification: Entity.Notification.Notification = {
