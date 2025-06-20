@@ -26,6 +26,7 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 					return lastItem && lastGroup.length === 50 ? lastItem.id : undefined;
 				},
 				initialPageParam: -1,
+				gcTime: 0,
 			});
 
 		const items = data?.pages.flat() || [];

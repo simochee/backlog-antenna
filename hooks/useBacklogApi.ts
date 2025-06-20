@@ -1,6 +1,5 @@
-import { useParams } from "@tanstack/react-router";
 import { Backlog } from "backlog-js";
-import { useSpaces } from "./useSpaces";
+import { useCurrentSpace } from "./useCurrentSpace";
 
 /**
  * 指定されたスペースのBacklog APIクライアントを取得する
@@ -8,18 +7,11 @@ import { useSpaces } from "./useSpaces";
  * @returns APIクライアント、スペース情報、ローディング状態、エラー情報
  */
 export const useBacklogApi = () => {
-	const { spaceDomain } = useParams({ strict: false });
-	const spaces = useSpaces();
-
-	const space = spaces.items.find((s) => s.spaceDomain === spaceDomain);
-
-	if (!space) {
-		throw new Error(`スペース ${spaceDomain} が見つかりません`);
-	}
+	const { spaceDomain, apiKey } = useCurrentSpace();
 
 	const api = new Backlog({
-		apiKey: space.apiKey,
-		host: space.spaceDomain,
+		apiKey: apiKey,
+		host: spaceDomain,
 	});
 
 	return api;

@@ -1,4 +1,5 @@
 import type { Entity } from "backlog-js";
+import { BacklogImage } from "../BacklogImage";
 
 type Props = {
 	project: Entity.Project.Project;
@@ -23,10 +24,10 @@ export const ProjectItem: React.FC<Props> = ({ project }) => {
 			className="grid w-full grid-cols-[auto_1fr] gap-y-1 p-4 hover:bg-yellow-50"
 			type="button"
 		>
-			<img
+			<BacklogImage
+				className="size-7 object-cover"
+				path={`/api/v2/projects/${project.id}/icon`}
 				alt=""
-				className="h-7 w-7 object-cover"
-				src="https://placehold.jp/320x320.png"
 			/>
 			<span className="flex items-end gap-1 self-center px-3 text-sm leading-none">
 				<span className="line-clamp-1">{project.name}</span>
