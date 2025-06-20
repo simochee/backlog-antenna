@@ -1,16 +1,20 @@
 import type { Entity } from "backlog-js";
+import { useCurrentSpace } from "@/hooks/useCurrentSpace";
 import { BacklogImage } from "../BacklogImage";
 import { StatusBadge } from "../StatusBadge";
+import { TabLink } from "../TabLink";
 
 type Props = {
 	issue: Entity.Issue.RecentlyViewedIssue;
 };
 
 export const IssueItem: React.FC<Props> = ({ issue: { issue } }) => {
+	const { spaceDomain } = useCurrentSpace();
+
 	return (
-		<button
-			type="button"
-			className="flex h-20 w-full flex-col justify-center gap-1 px-3 text-left"
+		<TabLink
+			href={`https://${spaceDomain}/view/${issue.issueKey}`}
+			className="flex h-20 w-full flex-col justify-center gap-1 px-3 text-left hover:bg-yellow-50"
 		>
 			<span className="flex items-center gap-1">
 				<StatusBadge color={issue.issueType.color}>
@@ -36,6 +40,6 @@ export const IssueItem: React.FC<Props> = ({ issue: { issue } }) => {
 					</>
 				)}
 			</span>
-		</button>
+		</TabLink>
 	);
 };

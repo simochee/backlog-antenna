@@ -3,7 +3,9 @@ import { clsx } from "clsx";
 import TimeAgo from "javascript-time-ago";
 import ja from "javascript-time-ago/locale/ja";
 import tinycolor from "tinycolor2";
+import { useCurrentSpace } from "@/hooks/useCurrentSpace";
 import { BacklogImage } from "../BacklogImage";
+import { TabLink } from "../TabLink";
 
 TimeAgo.addLocale(ja);
 const timeAgo = new TimeAgo("ja-JP");
@@ -39,10 +41,20 @@ type Props = {
 };
 
 export const NotificationItem: React.FC<Props> = ({ notification }) => {
+	const { spaceDomain } = useCurrentSpace();
+	const path = notification.pullRequest
+		? `/git/${notification.project.projectKey}/app/pullRequests/${notification.pullRequest.number}`
+		: notification.issue
+			? `/view/${notification.issue.issueKey}`
+			: `/projects/${notification.project.projectKey}`;
+
 	const reasonText = getReasonText(notification.reason);
 
 	return (
-		<div className="grid grid-cols-[1fr_auto] gap-3 p-4">
+		<TabLink
+			href={`https://${spaceDomain}${path}`}
+			className="grid grid-cols-[1fr_auto] gap-3 p-4 hover:bg-yellow-50"
+		>
 			<div className="grid gap-1">
 				<div className="flex items-center gap-1">
 					<BacklogImage
@@ -95,6 +107,6 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 					</p>
 				)}
 			</div>
-		</div>
+		</TabLink>
 	);
 };
