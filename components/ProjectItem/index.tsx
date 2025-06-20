@@ -1,5 +1,6 @@
 import type { Entity } from "backlog-js";
 import { useCurrentSpace } from "@/hooks/useCurrentSpace";
+import { ActionButtons } from "../ActionButtons";
 import { BacklogImage } from "../BacklogImage";
 import { TabLink } from "../TabLink";
 
@@ -49,17 +50,12 @@ export const ProjectItem: React.FC<Props> = ({ project }) => {
 				<span className="line-clamp-1">{project.name}</span>
 				<span className="text-2xs">({project.projectKey})</span>
 			</span>
-			<span className="col-start-2 flex flex-wrap">
-				{navItems.map(({ path, label }) => (
-					<TabLink
-						key={path}
-						href={`https://${spaceDomain}${path}`}
-						className="border-gray-300 border-r px-3 text-gray-500 text-xs leading-tight last:border-0 hover:text-black hover:underline"
-					>
-						{label}
-					</TabLink>
-				))}
-			</span>
+			<ActionButtons
+				buttons={navItems.map(({ path, label }) => ({
+					children: label,
+					href: `https://${spaceDomain}${path}`,
+				}))}
+			/>
 		</TabLink>
 	);
 };

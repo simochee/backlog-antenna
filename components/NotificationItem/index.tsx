@@ -4,6 +4,7 @@ import TimeAgo from "javascript-time-ago";
 import ja from "javascript-time-ago/locale/ja";
 import tinycolor from "tinycolor2";
 import { useCurrentSpace } from "@/hooks/useCurrentSpace";
+import { ActionButtons } from "../ActionButtons";
 import { BacklogImage } from "../BacklogImage";
 import { TabLink } from "../TabLink";
 
@@ -47,13 +48,40 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 		: notification.issue
 			? `/view/${notification.issue.issueKey}`
 			: `/projects/${notification.project.projectKey}`;
+	const hash = notification.comment
+		? `#comment-${notification.comment.id}`
+		: "";
+	const url = `https://${spaceDomain}${path}${hash}`;
 
 	const reasonText = getReasonText(notification.reason);
 
+	const quickActions = [
+		{ text: "既読", onClick() {}, enabled: !notification.alreadyRead },
+		{
+			text: "課題IDをコピー",
+			async onClick() {
+				if (notification.issue) {
+					await navigator.clipboard.writeText(notification.issue.issueKey);
+				}
+			},
+			enabled: !!notification.issue,
+		},
+		{
+			text: "URLをコピー",
+			async onClick() {
+				await navigator.clipboard.writeText(url);
+			},
+		},
+		{ text: "クイックビュー", onClick() {} },
+	].filter(({ enabled }) => enabled !== false);
+
 	return (
 		<TabLink
-			href={`https://${spaceDomain}${path}`}
-			className="grid grid-cols-[1fr_auto] gap-3 px-4 py-2 hover:bg-yellow-50"
+			href={url}
+			className={clsx(
+				"group relative grid grid-cols-[1fr_auto] gap-3 px-4 py-2 focus-within:bg-yellow-50 hover:bg-yellow-50",
+				notification.alreadyRead && "bg-gray-200",
+			)}
 		>
 			<div className="grid gap-1">
 				<div className="flex items-center gap-1">
@@ -107,6 +135,14 @@ export const NotificationItem: React.FC<Props> = ({ notification }) => {
 					</p>
 				)}
 			</div>
+			<aside className="invisible absolute right-2 bottom-1 bg-yellow-50 py-1 group-focus-within:visible group-hover:visible">
+				<ActionButtons
+					buttons={quickActions.map(({ text, onClick }) => ({
+						children: text,
+						onClick,
+					}))}
+				/>
+			</aside>
 		</TabLink>
 	);
 };

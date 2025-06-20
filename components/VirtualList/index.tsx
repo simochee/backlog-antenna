@@ -51,7 +51,7 @@ export const VirtualList: React.FC<Props> = ({
 	return (
 		<div
 			ref={parentRef}
-			className="scrollbar-brand h-popup-block overflow-scroll py-2 pr-1 pl-2"
+			className="scrollbar-brand h-popup-block overflow-y-scroll py-2 pr-1 pl-2"
 		>
 			<ul
 				className="relative w-full overflow-hidden rounded border-1 border-gray-300 bg-white"
