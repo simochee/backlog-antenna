@@ -8,7 +8,7 @@ export const PopupLayout: React.FC<Props> = ({ children }) => {
 			<aside>
 				<p>Navigation</p>
 			</aside>
-			<main h-full>{children}</main>
+			<main className="h-full">{children}</main>
 		</div>
 	);
 };

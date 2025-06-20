@@ -1,14 +1,18 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useRef } from "react";
+import { NotificationItem } from "@/components/NotificationItem";
+import { useInfiniteNotifications } from "@/hooks/useInfiniteNotifications";
 
 export const Route = createFileRoute("/$spaceDomain/notifications")({
 	component: () => {
+		const { items } = useInfiniteNotifications();
+
 		const parentRef = useRef<HTMLDivElement>(null);
 
 		const virtualizer = useVirtualizer({
-			count: 1000,
-			estimateSize: () => 35,
+			count: items.length,
+			estimateSize: () => 72,
 			getScrollElement: () => parentRef.current,
 		});
 
@@ -18,18 +22,22 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 					className="relative w-full"
 					style={{ height: `${virtualizer.getTotalSize()}px` }}
 				>
-					{virtualizer.getVirtualItems().map((virtualItem) => (
-						<li
-							className="absolute top-0 left-0 w-full"
-							key={virtualItem.key}
-							style={{
-								height: `${virtualItem.size}px`,
-								transform: `translateY(${virtualItem.start}px)`,
-							}}
-						>
-							hello {virtualItem.key}
-						</li>
-					))}
+					{virtualizer.getVirtualItems().map((virtualItem) => {
+						const item = items[virtualItem.index];
+
+						return (
+							<li
+								className="absolute top-0 left-0 w-full"
+								key={item.id}
+								style={{
+									height: `${virtualItem.size}px`,
+									transform: `translateY(${virtualItem.start}px)`,
+								}}
+							>
+								<NotificationItem notification={item} />
+							</li>
+						);
+					})}
 				</ul>
 			</div>
 		);
