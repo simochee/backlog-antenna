@@ -10,8 +10,6 @@ import "@/assets/style.css";
 import { createQueryClient } from "@/utils/queryClient";
 import { routeTree } from "./routeTree.gen";
 
-const queryClient = createQueryClient();
-
 const memoryHistory = createMemoryHistory({
 	initialEntries: ["/"],
 });
@@ -26,6 +24,8 @@ declare module "@tanstack/react-router" {
 		router: typeof router;
 	}
 }
+
+const queryClient = createQueryClient();
 
 const rootEl = document.getElementById("root");
 
