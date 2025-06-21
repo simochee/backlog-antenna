@@ -26,11 +26,18 @@ export const Route = createFileRoute("/$spaceDomain/projects")({
 		const { projects } = Route.useLoaderData();
 
 		return (
-			<ul>
-				{projects.map((project) => (
-					<ProjectItem key={project.id} project={project} />
-				))}
-			</ul>
+			<div className="scrollbar-brand overflow-scroll py-2 pr-1 pl-2">
+				<ul className="rounded border-1 border-gray-300 bg-white">
+					{projects.map((project) => (
+						<li
+							key={project.id}
+							className="border-gray-300 not-first:border-t even:bg-gray-50"
+						>
+							<ProjectItem project={project} />
+						</li>
+					))}
+				</ul>
+			</div>
 		);
 	},
 	pendingComponent: () => (
