@@ -1,11 +1,6 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import type { StorybookConfig } from "@storybook/react-vite";
 import tailwindcss from "@tailwindcss/vite";
 import { mergeConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
 	addons: [
@@ -31,9 +26,6 @@ const config: StorybookConfig = {
 			plugins: [
 				// biome-ignore lint/suspicious/noExplicitAny: TailwindCSS v4 は Vite 6 に未対応
 				tailwindcss() as any,
-				tsconfigPaths({
-					projects: ["./tsconfig.json"],
-				}),
 			],
 		});
 	},
