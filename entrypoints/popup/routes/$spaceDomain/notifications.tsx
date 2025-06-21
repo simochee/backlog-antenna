@@ -1,6 +1,8 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { NotificationItem } from "@/components/NotificationItem";
+import { NotificationSkeleton } from "@/components/NotificationSkeleton";
+import { SkeltonList } from "@/components/SkeltonList";
 import { VirtualList } from "@/components/VirtualList";
 import { useBacklogApi } from "@/hooks/useBacklogApi";
 
@@ -12,6 +14,8 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 			useSuspenseInfiniteQuery({
 				async queryFn({ pageParam }) {
 					const maxId = pageParam === -1 ? undefined : pageParam;
+
+					await new Promise((r) => setTimeout(r, 3000));
 
 					const items = await backlogApi.getNotifications({
 						count: 50,
@@ -60,9 +64,8 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 		</div>
 	),
 	pendingComponent: () => (
-		<div>
-			<h2 className="mb-4 font-bold text-gray-800 text-xl">お知らせ一覧</h2>
-			<div className="text-center text-gray-600">お知らせを読み込み中...</div>
-		</div>
+		<SkeltonList>
+			<NotificationSkeleton />
+		</SkeltonList>
 	),
 });

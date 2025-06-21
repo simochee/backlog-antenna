@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Backlog } from "backlog-js";
+import { NotificationSkeleton } from "@/components/NotificationSkeleton";
 import { ProjectItem } from "@/components/ProjectItem";
+import { SkeltonList } from "@/components/SkeltonList";
 import { getSpaces } from "@/storages/spaces";
 
 export const Route = createFileRoute("/$spaceDomain/projects")({
@@ -41,11 +43,8 @@ export const Route = createFileRoute("/$spaceDomain/projects")({
 		);
 	},
 	pendingComponent: () => (
-		<div>
-			<h2 className="mb-4 font-bold text-gray-800 text-xl">プロジェクト一覧</h2>
-			<div className="text-center text-gray-600">
-				プロジェクトを読み込み中...
-			</div>
-		</div>
+		<SkeltonList>
+			<NotificationSkeleton />
+		</SkeltonList>
 	),
 });
