@@ -1,5 +1,6 @@
 import { Link, useParams } from "@tanstack/react-router";
 import icon from "~/assets/icon.svg";
+import { SpaceSwitch } from "../SpaceSwitch";
 
 type Props = {
 	children: React.ReactNode;
@@ -25,7 +26,7 @@ export const PopupLayout: React.FC<Props> = ({ children }) => {
 
 	return (
 		<div className="grid h-full grid-cols-[180px_1fr]">
-			<aside className="bg-brand-500">
+			<aside className="flex h-full flex-col bg-brand-500">
 				<div className="flex items-center px-2 py-4">
 					<img className="size-8" src={icon} alt="" />
 				</div>
@@ -45,6 +46,9 @@ export const PopupLayout: React.FC<Props> = ({ children }) => {
 						))}
 					</nav>
 				)}
+				<div className="mt-auto pb-2">
+					<SpaceSwitch />
+				</div>
 			</aside>
 			<main className="h-full">{children}</main>
 		</div>
