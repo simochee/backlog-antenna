@@ -5,9 +5,11 @@ import { IssueItemSkeleton } from "@/components/IssueItemSkeleton";
 import { SkeltonList } from "@/components/SkeltonList";
 import { VirtualList } from "@/components/VirtualList";
 import { useBacklogApi } from "@/hooks/useBacklogApi";
+import { useCurrentSpace } from "@/hooks/useCurrentSpace";
 
 export const Route = createFileRoute("/$spaceDomain/issues")({
 	component: () => {
+		const { spaceDomain } = useCurrentSpace();
 		const backlogApi = useBacklogApi();
 
 		const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -23,7 +25,7 @@ export const Route = createFileRoute("/$spaceDomain/issues")({
 
 					return items || [];
 				},
-				queryKey: ["recentlyViewedIssues"],
+				queryKey: ["recentlyViewedIssues", spaceDomain],
 				getNextPageParam(lastGroup, _allGroups, lastPageParam) {
 					const offset = lastPageParam === -1 ? 0 : lastPageParam;
 					return lastGroup.length === 50 ? offset + 50 : undefined;

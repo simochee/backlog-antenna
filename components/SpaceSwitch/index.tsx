@@ -38,7 +38,7 @@ export const SpaceSwitch: React.FC = () => {
 					<MenuItem key={space.spaceDomain} as={Fragment}>
 						<Link
 							className="flex w-full items-center gap-2 p-2 hover:bg-yellow-50 active:bg-yellow-50"
-							to="/$spaceDomain/issues"
+							to="/$spaceDomain/notifications"
 							params={{ spaceDomain: space.spaceDomain }}
 						>
 							<span className="block size-6 rounded-xs bg-slate-300" />

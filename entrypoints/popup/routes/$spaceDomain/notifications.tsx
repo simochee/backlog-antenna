@@ -5,9 +5,11 @@ import { NotificationSkeleton } from "@/components/NotificationSkeleton";
 import { SkeltonList } from "@/components/SkeltonList";
 import { VirtualList } from "@/components/VirtualList";
 import { useBacklogApi } from "@/hooks/useBacklogApi";
+import { useCurrentSpace } from "@/hooks/useCurrentSpace";
 
 export const Route = createFileRoute("/$spaceDomain/notifications")({
 	component: () => {
+		const { spaceDomain } = useCurrentSpace();
 		const backlogApi = useBacklogApi();
 
 		const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -24,7 +26,7 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 
 					return items || [];
 				},
-				queryKey: ["notifications"],
+				queryKey: ["notifications", spaceDomain],
 				getNextPageParam(lastGroup) {
 					const lastItem = lastGroup.slice().pop();
 					return lastItem && lastGroup.length === 50 ? lastItem.id : undefined;
