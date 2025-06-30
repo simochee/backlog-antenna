@@ -1,6 +1,8 @@
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { IssueItem } from "@/components/IssueItem";
+import { IssueItemSkeleton } from "@/components/IssueItemSkeleton";
+import { SkeltonList } from "@/components/SkeltonList";
 import { VirtualList } from "@/components/VirtualList";
 import { useBacklogApi } from "@/hooks/useBacklogApi";
 
@@ -59,11 +61,8 @@ export const Route = createFileRoute("/$spaceDomain/issues")({
 		</div>
 	),
 	pendingComponent: () => (
-		<div>
-			<h2 className="mb-4 font-bold text-gray-800 text-xl">最近見た課題</h2>
-			<div className="text-center text-gray-600">
-				最近見た課題を読み込み中...
-			</div>
-		</div>
+		<SkeltonList>
+			<IssueItemSkeleton />
+		</SkeltonList>
 	),
 });
