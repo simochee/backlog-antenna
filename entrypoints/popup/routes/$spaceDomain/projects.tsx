@@ -43,7 +43,7 @@ export const Route = createFileRoute("/$spaceDomain/projects")({
 		);
 	},
 	pendingComponent: () => (
-		<SkeltonList>
+		<SkeltonList length={8}>
 			<NotificationSkeleton />
 		</SkeltonList>
 	),

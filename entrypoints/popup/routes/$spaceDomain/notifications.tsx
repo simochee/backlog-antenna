@@ -66,7 +66,7 @@ export const Route = createFileRoute("/$spaceDomain/notifications")({
 		</div>
 	),
 	pendingComponent: () => (
-		<SkeltonList>
+		<SkeltonList length={8}>
 			<NotificationSkeleton />
 		</SkeltonList>
 	),

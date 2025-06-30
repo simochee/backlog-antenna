@@ -63,7 +63,7 @@ export const Route = createFileRoute("/$spaceDomain/issues")({
 		</div>
 	),
 	pendingComponent: () => (
-		<SkeltonList>
+		<SkeltonList length={6}>
 			<IssueItemSkeleton />
 		</SkeltonList>
 	),

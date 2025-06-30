@@ -1,12 +1,13 @@
 type Props = {
+	length: number;
 	children: React.ReactNode;
 };
 
-export const SkeltonList: React.FC<Props> = ({ children }) => {
+export const SkeltonList: React.FC<Props> = ({ length, children }) => {
 	return (
 		<div className="scrollbar-brand relative overflow-y-scroll px-1 py-2 pl-2">
 			<ul className="overflow-hidden rounded border-1 border-gray-300 border-b-0 bg-white">
-				{Array.from({ length: 8 })
+				{Array.from({ length })
 					.map((_, i) => i)
 					.map((n) => (
 						<li
