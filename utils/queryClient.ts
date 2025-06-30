@@ -27,10 +27,10 @@ export const persister = createAsyncStoragePersister({
 			delete cache[key];
 			await persistStorage.setValue(cache);
 		},
-		setItem: async (key: string, value: string) => {
-			const cache = await persistStorage.getValue();
-			cache[key] = { value, timestamp: Date.now() };
-			await persistStorage.setValue(cache);
+		setItem: async (_key: string, _value: string) => {
+			// const cache = await persistStorage.getValue();
+			// cache[key] = { value, timestamp: Date.now() };
+			// await persistStorage.setValue(cache);
 		},
 	},
 });
