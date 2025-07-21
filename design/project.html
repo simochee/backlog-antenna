@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Backlog Antenna - プロジェクト一覧</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: #f8fafc;
+            width: 380px;
+            height: 600px;
+            overflow: hidden;
+        }
+
+        /* メインコンテナ */
+        .popup-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background: white;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ヘッダー */
+        .header {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 16px;
+            position: relative;
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .logo {
+            font-weight: 700;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo::before {
+            content: "📊";
+            font-size: 18px;
+        }
+
+        .space-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .space-info:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .project-count {
+            background: #f59e0b;
+            color: white;
+            border-radius: 12px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* ナビゲーション */
+        .navigation {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            position: relative;
+        }
+
+        .nav-item {
+            flex: 1;
+            padding: 12px 16px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item.active {
+            color: #10b981;
+        }
+
+        .nav-item.active::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, #10b981, #059669);
+            border-radius: 2px 2px 0 0;
+        }
+
+        /* メインコンテンツ */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .content-header {
+            background: white;
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .content-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .view-toggle {
+            display: flex;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .view-btn {
+            padding: 6px 10px;
+            border: none;
+            background: #f9fafb;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .view-btn.active {
+            background: #10b981;
+            color: white;
+        }
+
+        /* プロジェクトグリッド */
+        .project-grid {
+            padding: 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .project-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.15);
+            border-color: #10b981;
+        }
+
+        .project-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+
+        .project-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .project-key {
+            background: #f0fdf4;
+            color: #059669;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .project-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #10b981;
+            position: relative;
+        }
+
+        .project-status.inactive {
+            background: #ef4444;
+        }
+
+        .project-status::after {
+            content: "";
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid currentColor;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: pulse 2s infinite;
+            opacity: 0.3;
+        }
+
+        .project-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 6px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .project-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+        }
+
+        .stat-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .stat-number {
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .project-features {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+
+        .feature-icon {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8px;
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .feature-icon.enabled {
+            background: #dcfce7;
+            color: #059669;
+        }
+
+        /* フッター */
+        .footer {
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-stats {
+            font-size: 11px;
+            color: #6b7280;
+        }
+
+        .footer-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .footer-btn {
+            padding: 6px 12px;
+            border: 1px solid #d1d5db;
+            background: white;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .footer-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .footer-btn.primary {
+            background: #10b981;
+            color: white;
+            border-color: #10b981;
+        }
+
+        .footer-btn.primary:hover {
+            background: #059669;
+        }
+
+        /* アニメーション */
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.1; transform: translate(-50%, -50%) scale(1.2); }
+        }
+
+        /* スクロールバー */
+        .content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 2px;
+        }
+
+        .content::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="popup-container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <div class="header-top">
+                <div class="logo">Backlog Antenna</div>
+            </div>
+            <div class="space-info">
+                <span>example.backlog.com</span>
+                <span class="project-count">6</span>
+                <span>▼</span>
+            </div>
+        </header>
+
+        <!-- ナビゲーション -->
+        <nav class="navigation">
+            <button class="nav-item">お知らせ</button>
+            <button class="nav-item active">プロジェクト</button>
+            <button class="nav-item">課題</button>
+        </nav>
+
+        <!-- メインコンテンツ -->
+        <main class="content">
+            <div class="content-header">
+                <h2 class="content-title">プロジェクト一覧</h2>
+                <div class="view-toggle">
+                    <button class="view-btn active">📊</button>
+                    <button class="view-btn">📋</button>
+                </div>
+            </div>
+
+            <div class="project-grid">
+                <!-- アクティブプロジェクト -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-key">WEB</span>
+                        <span class="project-status"></span>
+                    </div>
+                    <h3 class="project-name">WEBサイトリニューアル</h3>
+                    <div class="project-features">
+                        <span class="feature-icon enabled" title="Wiki">📚</span>
+                        <span class="feature-icon enabled" title="ファイル共有">📁</span>
+                        <span class="feature-icon enabled" title="Git">🔗</span>
+                        <span class="feature-icon enabled" title="ガントチャート">📈</span>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-group">
+                            <span class="stat-item">
+                                📋 <span class="stat-number">23</span>
+                            </span>
+                            <span class="stat-item">
+                                ✅ <span class="stat-number">15</span>
+                            </span>
+                        </div>
+                        <span class="stat-item">85%</span>
+                    </div>
+                </div>
+
+                <!-- APIプロジェクト -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-key">API</span>
+                        <span class="project-status"></span>
+                    </div>
+                    <h3 class="project-name">REST API開発</h3>
+                    <div class="project-features">
+                        <span class="feature-icon enabled" title="Wiki">📚</span>
+                        <span class="feature-icon" title="ファイル共有">📁</span>
+                        <span class="feature-icon enabled" title="Git">🔗</span>
+                        <span class="feature-icon" title="ガントチャート">📈</span>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-group">
+                            <span class="stat-item">
+                                📋 <span class="stat-number">45</span>
+                            </span>
+                            <span class="stat-item">
+                                ✅ <span class="stat-number">32</span>
+                            </span>
+                        </div>
+                        <span class="stat-item">71%</span>
+                    </div>
+                </div>
+
+                <!-- モバイルアプリ -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-key">MOB</span>
+                        <span class="project-status"></span>
+                    </div>
+                    <h3 class="project-name">モバイルアプリ開発</h3>
+                    <div class="project-features">
+                        <span class="feature-icon enabled" title="Wiki">📚</span>
+                        <span class="feature-icon enabled" title="ファイル共有">📁</span>
+                        <span class="feature-icon enabled" title="Git">🔗</span>
+                        <span class="feature-icon enabled" title="ガントチャート">📈</span>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-group">
+                            <span class="stat-item">
+                                📋 <span class="stat-number">67</span>
+                            </span>
+                            <span class="stat-item">
+                                ✅ <span class="stat-number">12</span>
+                            </span>
+                        </div>
+                        <span class="stat-item">18%</span>
+                    </div>
+                </div>
+
+                <!-- QAプロジェクト -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-key">QA</span>
+                        <span class="project-status"></span>
+                    </div>
+                    <h3 class="project-name">品質保証・テスト</h3>
+                    <div class="project-features">
+                        <span class="feature-icon enabled" title="Wiki">📚</span>
+                        <span class="feature-icon" title="ファイル共有">📁</span>
+                        <span class="feature-icon" title="Git">🔗</span>
+                        <span class="feature-icon enabled" title="ガントチャート">📈</span>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-group">
+                            <span class="stat-item">
+                                📋 <span class="stat-number">29</span>
+                            </span>
+                            <span class="stat-item">
+                                ✅ <span class="stat-number">25</span>
+                            </span>
+                        </div>
+                        <span class="stat-item">86%</span>
+                    </div>
+                </div>
+
+                <!-- デザインプロジェクト -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-key">DES</span>
+                        <span class="project-status"></span>
+                    </div>
+                    <h3 class="project-name">UIデザイン</h3>
+                    <div class="project-features">
+                        <span class="feature-icon enabled" title="Wiki">📚</span>
+                        <span class="feature-icon enabled" title="ファイル共有">📁</span>
+                        <span class="feature-icon" title="Git">🔗</span>
+                        <span class="feature-icon" title="ガントチャート">📈</span>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-group">
+                            <span class="stat-item">
+                                📋 <span class="stat-number">18</span>
+                            </span>
+                            <span class="stat-item">
+                                ✅ <span class="stat-number">16</span>
+                            </span>
+                        </div>
+                        <span class="stat-item">89%</span>
+                    </div>
+                </div>
+
+                <!-- アーカイブプロジェクト -->
+                <div class="project-card">
+                    <div class="project-header">
+                        <span class="project-key">OLD</span>
+                        <span class="project-status inactive"></span>
+                    </div>
+                    <h3 class="project-name">旧システム保守</h3>
+                    <div class="project-features">
+                        <span class="feature-icon" title="Wiki">📚</span>
+                        <span class="feature-icon" title="ファイル共有">📁</span>
+                        <span class="feature-icon" title="Git">🔗</span>
+                        <span class="feature-icon" title="ガントチャート">📈</span>
+                    </div>
+                    <div class="project-stats">
+                        <div class="stat-group">
+                            <span class="stat-item">
+                                📋 <span class="stat-number">5</span>
+                            </span>
+                            <span class="stat-item">
+                                ✅ <span class="stat-number">5</span>
+                            </span>
+                        </div>
+                        <span class="stat-item">100%</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="footer">
+            <div class="footer-stats">
+                アクティブ: 5 | アーカイブ: 1
+            </div>
+            <div class="footer-actions">
+                <button class="footer-btn">フィルタ</button>
+                <button class="footer-btn primary">管理</button>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
